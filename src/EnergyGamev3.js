@@ -726,6 +726,25 @@ const getHome3Forecast = useCallback(() => {
     </div>
 
     <h3 className="text-xl mt-2">Photovoltaic Panel ({maxSolarPower} kW-peak)</h3>
+    <div className="flex items-center justify-center my-2">
+      <button
+        className="w-8 h-8 bg-yellow-500 text-white rounded-l flex items-center justify-center hover:bg-yellow-600"
+        onClick={() => setSolarPanelCount(Math.max(0, solarPanelCount - 1))}
+        disabled={gameRunning}
+      >
+        -
+      </button>
+      <span className="w-10 h-8 bg-white flex items-center justify-center border-t border-b font-bold text-lg">
+        {solarPanelCount}
+      </span>
+      <button
+        className="w-8 h-8 bg-yellow-500 text-white rounded-r flex items-center justify-center hover:bg-yellow-600"
+        onClick={() => setSolarPanelCount(solarPanelCount + 1)}
+        disabled={gameRunning}
+      >
+        +
+      </button>
+    </div>
 	<p>Energy: <span className="font-bold">{solarPanelCount !== 0 ? (solarEnergyProduced/solarPanelCount).toFixed(1) + " kWh" : "not selected"}</span></p>
     <p>
     {(currentHour % 24) >= 6 && (currentHour % 24) <= 18
@@ -748,7 +767,7 @@ const getHome3Forecast = useCallback(() => {
     <h2 className="text-xl font-bold text-center mb-4">Net Grid Power Flow <br />
       <span className="text-base font-normal text-gray-700">(import positive/export negative)</span>
     </h2>
-    <div className="h-64 w-full mb-2">
+    <div className="h-full w-full mb-2">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={getNetConsumptionForecast()}>
           <XAxis dataKey="hour" tick={{fontSize: 10}} interval={3} label={{value: "Hours", position: "insideBottom", offset: -2}} />
@@ -771,133 +790,6 @@ const getHome3Forecast = useCallback(() => {
         </BarChart>
       </ResponsiveContainer>
     </div>
-
-    <div className="mt-4 text-center">
-    {/* Asset quantity controls */}
-
-    <div className="mt-4">
-
-    <h4 className="text-xl font-bold mb-2">Community Assets</h4>
-
-    {/* Consumers Section */}
-    <div className="border border-gray-300 rounded-lg p-3 mb-3 bg-gray-50">
-      <h5 className="text-lg font-semibold mb-2 text-left border-b pb-1">Consumers</h5>
-
-      <div className="flex items-center justify-between mb-2 p-2 bg-blue-50 rounded">
-        <span className="text-sm text-blue-700 font-semibold">Smart-Working:</span>
-        <div className="flex items-center">
-          <button
-            className="w-8 h-8 bg-blue-500 text-white rounded-l flex items-center justify-center hover:bg-blue-600"
-            onClick={() => setHome1Count(Math.max(0, home1Count - 1))}
-          >
-            -
-          </button>
-          <span className="w-8 h-8 bg-white flex items-center justify-center border-t border-b">
-            {home1Count}
-          </span>
-          <button
-            className="w-8 h-8 bg-blue-500 text-white rounded-r flex items-center justify-center hover:bg-blue-600"
-            onClick={() => setHome1Count(home1Count + 1)}
-          >
-            +
-          </button>
-        </div>
-      </div>
-
-      <div className="flex items-center justify-between mb-2 p-2 bg-yellow-50 rounded">
-        <span className="text-sm text-yellow-700 font-semibold">Standard Home:</span>
-        <div className="flex items-center">
-          <button
-            className="w-8 h-8 bg-yellow-500 text-white rounded-l flex items-center justify-center hover:bg-yellow-600"
-            onClick={() => setHome2Count(Math.max(0, home2Count - 1))}
-          >
-            -
-          </button>
-          <span className="w-8 h-8 bg-white flex items-center justify-center border-t border-b">
-            {home2Count}
-          </span>
-          <button
-            className="w-8 h-8 bg-yellow-500 text-white rounded-r flex items-center justify-center hover:bg-yellow-600"
-            onClick={() => setHome2Count(home2Count + 1)}
-          >
-            +
-          </button>
-        </div>
-      </div>
-
-      <div className="flex items-center justify-between mb-2 p-2 bg-green-50 rounded">
-        <span className="text-sm text-green-700 font-semibold">Large Family:</span>
-        <div className="flex items-center">
-          <button
-            className="w-8 h-8 bg-green-500 text-white rounded-l flex items-center justify-center hover:bg-green-600"
-            onClick={() => setHome3Count(Math.max(0, home3Count - 1))}
-          >
-            -
-          </button>
-          <span className="w-8 h-8 bg-white flex items-center justify-center border-t border-b">
-            {home3Count}
-          </span>
-          <button
-            className="w-8 h-8 bg-green-500 text-white rounded-r flex items-center justify-center hover:bg-green-600"
-            onClick={() => setHome3Count(home3Count + 1)}
-          >
-            +
-          </button>
-        </div>
-      </div>
-
-      <div className="flex items-center justify-between mb-2 p-2 bg-purple-50 rounded">
-        <span className="text-sm text-purple-700 font-semibold">Businesses:</span>
-        <div className="flex items-center">
-          <button
-            className="w-8 h-8 bg-purple-500 text-white rounded-l flex items-center justify-center hover:bg-purple-600"
-            onClick={() => setBusinessCount(Math.max(0, businessCount - 1))}
-          >
-            -
-          </button>
-          <span className="w-8 h-8 bg-white flex items-center justify-center border-t border-b">
-            {businessCount}
-          </span>
-          <button
-            className="w-8 h-8 bg-purple-500 text-white rounded-r flex items-center justify-center hover:bg-purple-600"
-            onClick={() => setBusinessCount(businessCount + 1)}
-          >
-            +
-          </button>
-        </div>
-      </div>
-    </div>
-
-
-<div className="border border-gray-300 rounded-lg p-3 mb-3 bg-gray-50">
-  <h5 className="text-lg font-semibold mb-2 text-left border-b pb-1">Generators</h5>
-
-  <div className="flex items-center justify-between mb-2 p-2 bg-yellow-50 rounded">
-    <span className="text-sm text-yellow-700 font-semibold">Photovoltaic Panels:</span>
-    <div className="flex items-center">
-      <button
-        className="w-8 h-8 bg-yellow-500 text-white rounded-l flex items-center justify-center hover:bg-yellow-600"
-        onClick={() => setSolarPanelCount(Math.max(0, solarPanelCount - 1))}
-      >
-        -
-      </button>
-      <span className="w-8 h-8 bg-white flex items-center justify-center border-t border-b">
-        {solarPanelCount}
-      </span>
-      <button
-        className="w-8 h-8 bg-yellow-500 text-white rounded-r flex items-center justify-center hover:bg-yellow-600"
-        onClick={() => setSolarPanelCount(solarPanelCount + 1)}
-      >
-        +
-      </button>
-    </div>
-  </div>
-</div>
-
-
-
-</div>
-</div>
 </div>
 
 
@@ -934,6 +826,25 @@ const getHome3Forecast = useCallback(() => {
       <h3 className="text-lg font-semibold">Smart-Working Home</h3>
       <p className="text-sm text-gray-600">Work-from-home family</p>
 
+        <div className="flex items-center my-2">
+          <button
+            className="w-8 h-8 bg-blue-500 text-white rounded-l flex items-center justify-center hover:bg-blue-600"
+            onClick={() => setHome1Count(Math.max(0, home1Count - 1))}
+            disabled={gameRunning}
+          >
+            -
+          </button>
+          <span className="w-10 h-8 bg-white flex items-center justify-center border-t border-b font-bold text-lg">
+            {home1Count}
+          </span>
+          <button
+            className="w-8 h-8 bg-blue-500 text-white rounded-r flex items-center justify-center hover:bg-blue-600"
+            onClick={() => setHome1Count(home1Count + 1)}
+            disabled={gameRunning}
+          >
+            +
+          </button>
+        </div>
 
 	  <p className="mt-2">Real-time consumption: <span className="font-bold">{home1Count !== 0 ? (getHome1Consumption() / home1Count).toFixed(1) + " kWh" : "not selected"}</span></p>
 
@@ -964,6 +875,25 @@ const getHome3Forecast = useCallback(() => {
 
       <h3 className="text-lg font-semibold">Standard Home</h3>
       <p className="text-sm text-gray-600">Empty during daytime</p>
+      <div className="flex items-center my-2">
+          <button
+            className="w-8 h-8 bg-yellow-500 text-white rounded-l flex items-center justify-center hover:bg-yellow-600"
+            onClick={() => setHome2Count(Math.max(0, home2Count - 1))}
+            disabled={gameRunning}
+          >
+            -
+          </button>
+          <span className="w-10 h-8 bg-white flex items-center justify-center border-t border-b font-bold text-lg">
+            {home2Count}
+          </span>
+          <button
+            className="w-8 h-8 bg-yellow-500 text-white rounded-r flex items-center justify-center hover:bg-yellow-600"
+            onClick={() => setHome2Count(home2Count + 1)}
+            disabled={gameRunning}
+          >
+            +
+          </button>
+        </div>
       <p className="mt-2">Real-time consumption: <span className="font-bold">{home2Count !== 0 ? (getHome2Consumption() / home2Count).toFixed(1) + " kWh" : "not selected"}</span></p>
       </div>
 
@@ -992,6 +922,25 @@ const getHome3Forecast = useCallback(() => {
 
       <h3 className="text-lg font-semibold">Large Family</h3>
       <p className="text-sm text-gray-600">High evening usage</p>
+        <div className="flex items-center my-2">
+          <button
+            className="w-8 h-8 bg-green-500 text-white rounded-l flex items-center justify-center hover:bg-green-600"
+            onClick={() => setHome3Count(Math.max(0, home3Count - 1))}
+            disabled={gameRunning}
+          >
+            -
+          </button>
+          <span className="w-10 h-8 bg-white flex items-center justify-center border-t border-b font-bold text-lg">
+            {home3Count}
+          </span>
+          <button
+            className="w-8 h-8 bg-green-500 text-white rounded-r flex items-center justify-center hover:bg-green-600"
+            onClick={() => setHome3Count(home3Count + 1)}
+            disabled={gameRunning}
+          >
+            +
+          </button>
+        </div>
       <p className="mt-2">Real-time consumption: <span className="font-bold">{home3Count !== 0 ? (getHome3Consumption() / home3Count).toFixed(1) + " kWh" : "not selected"}</span></p>
       </div>
 
@@ -1020,6 +969,25 @@ const getHome3Forecast = useCallback(() => {
 
       <h3 className="text-lg font-semibold">Local Business</h3>
       <p className="text-sm text-gray-600">Closed weekends</p>
+        <div className="flex items-center my-2">
+          <button
+            className="w-8 h-8 bg-purple-500 text-white rounded-l flex items-center justify-center hover:bg-purple-600"
+            onClick={() => setBusinessCount(Math.max(0, businessCount - 1))}
+            disabled={gameRunning}
+          >
+            -
+          </button>
+          <span className="w-10 h-8 bg-white flex items-center justify-center border-t border-b font-bold text-lg">
+            {businessCount}
+          </span>
+          <button
+            className="w-8 h-8 bg-purple-500 text-white rounded-r flex items-center justify-center hover:bg-purple-600"
+            onClick={() => setBusinessCount(businessCount + 1)}
+            disabled={gameRunning}
+          >
+            +
+          </button>
+        </div>
       <p className="mt-2">Real-time consumption: <span className="font-bold">{businessCount !==
 0 ? (getBusinessConsumption() / businessCount).toFixed(1) + " kWh" : "not selected"}</span></p>
       </div>
@@ -1048,6 +1016,7 @@ const getHome3Forecast = useCallback(() => {
   <ul className="list-disc pl-5">
     <li>Observe the different consumption patterns of each consumer</li>
     <li>Watch how solar energy production fluctuates with weather conditions</li>
+    <li>Add consumers and photovoltaic panels to build your community.</li>
     <li>Electricity is imported from the grid when consumption exceeds local generation.</li>
     <li>Excess electricity is exported to the grid when generation exceeds local consumption.</li>
     <li>Your goal: Build your Energy Community and find the best combination to minimize grid imports!</li>
