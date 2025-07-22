@@ -246,6 +246,18 @@ const EnergyGridSimulator = () => {
     return getTotalConsumption() - totalEnergyProduced;
   }, [getTotalConsumption, totalEnergyProduced]);
 
+  const getSingleUnitConsumption = useCallback(() => {
+    return weekData.home2Consumption[currentHour];
+  }, [weekData.home2Consumption, currentHour]);
+
+  const getSingleUnitProduction = useCallback(() => {
+    return calculateSolarProduction(currentHour, 1);
+  }, [calculateSolarProduction, currentHour]);
+
+  const getSingleUnitGridInteraction = useCallback(() => {
+    return getSingleUnitConsumption() - getSingleUnitProduction();
+  }, [getSingleUnitConsumption, getSingleUnitProduction]);
+
   // Calculate net consumption forecast
   const getNetConsumptionForecast = useCallback(() => {
     const forecast = [];
@@ -533,6 +545,27 @@ const getHome3Forecast = useCallback(() => {
         </div>
 
         <div className="w-1/2 text-center">
+            {/* Single Unit Summary */}
+            <div className="bg-white rounded-lg p-2 shadow flex items-center mb-2">
+                <span className="text-md font-bold text-gray-700 mr-3 pl-2">Single Unit</span>
+                <div className="flex justify-around items-center flex-grow">
+                    <div>
+                        <p className="text-gray-600 font-bold text-sm">Consumption</p>
+                        <p className="text-xl font-bold">{getSingleUnitConsumption().toFixed(1)} kWh</p>
+                    </div>
+                    <div>
+                        <p className="text-gray-600 font-bold text-sm">Generation</p>
+                        <p className="text-xl font-bold">{getSingleUnitProduction().toFixed(1)} kWh</p>
+                    </div>
+                    <div>
+                        <p className="text-gray-600 font-bold text-sm">{getSingleUnitGridInteraction() > 0 ? 'Importing' : 'Exporting'}</p>
+                        <p className={`text-xl font-bold ${getSingleUnitGridInteraction() > 0 ? 'text-red-500' : 'text-green-500'}`}>
+                            {Math.abs(getSingleUnitGridInteraction()).toFixed(1)} kWh
+                        </p>
+                    </div>
+                </div>
+            </div>
+
 			<div className="bg-blue-50 rounded-lg p-4 shadow flex items-center">
 				<span className="text-xl font-normal text-gray-600 mr-4 font-bold">Community</span>
 				<div className="flex justify-around items-center flex-grow">
