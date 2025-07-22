@@ -341,6 +341,29 @@ const getHome3Forecast = useCallback(() => {
     return forecast;
   }, [currentHour, weekData.businessConsumption]);
 
+  // Calculate net consumption for a single standard home and a single solar panel
+  const getSingleHomeNetForecast = useCallback(() => {
+    const forecast = [];
+    for (let i = 0; i < 24; i++) {
+      const hour = (currentHour + i) % weekData.weather.length;
+      const time = (currentHour + i) % 24;
+
+      // Consumption for ONE standard home (Home 2)
+      const homeConsumption = weekData.home2Consumption[hour];
+
+      // Production for ONE solar panel
+      const solarProduction = calculateSolarProduction(hour, 1);
+
+      const netConsumption = homeConsumption - solarProduction;
+
+      forecast.push({
+        hour: time,
+        netConsumption: netConsumption,
+      });
+    }
+    return forecast;
+  }, [currentHour, weekData, calculateSolarProduction]);
+
 // Reset game function
   const resetGame = useCallback(() => {
     setGameRunning(false);
@@ -510,25 +533,26 @@ const getHome3Forecast = useCallback(() => {
         </div>
 
         <div className="w-1/2 text-center">
-            <div className="bg-blue-50 rounded-lg p-4 shadow text-center">
-                <div className="flex justify-around items-center mt-2">
-                    <div>
-                        <p className="text-gray-600 font-bold">Total Consumption</p>
-                        <p className="text-2xl font-bold">{getTotalConsumption().toFixed(1)} kWh</p>
-                    </div>
-                    <div>
-                        <p className="text-gray-600 font-bold">Total Generation</p>
-                        <p className="text-2xl font-bold">{totalEnergyProduced.toFixed(1)} kWh</p>
-                    </div>
-                    <div>
-                        <p className="text-gray-600 font-bold">{getGridInteraction() > 0 ? 'Importing from Grid' : 'Exporting to Grid'}</p>
-                        <p className={`text-2xl font-bold ${getGridInteraction() > 0 ? 'text-red-500' : 'text-green-500'}`}>
-                            {Math.abs(getGridInteraction()).toFixed(1)} kWh
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
+			<div className="bg-blue-50 rounded-lg p-4 shadow flex items-center">
+				<span className="text-xl font-normal text-gray-600 mr-4 font-bold">Community</span>
+				<div className="flex justify-around items-center flex-grow">
+					<div>
+						<p className="text-gray-600 font-bold">Total Consumption</p>
+						<p className="text-2xl font-bold">{getTotalConsumption().toFixed(1)} kWh</p>
+					</div>
+					<div>
+						<p className="text-gray-600 font-bold">Total Generation</p>
+						<p className="text-2xl font-bold">{totalEnergyProduced.toFixed(1)} kWh</p>
+					</div>
+					<div>
+						<p className="text-gray-600 font-bold">{getGridInteraction() > 0 ? 'Importing from Grid' : 'Exporting to Grid'}</p>
+						<p className={`text-2xl font-bold ${getGridInteraction() > 0 ? 'text-red-500' : 'text-green-500'}`}>
+							{Math.abs(getGridInteraction()).toFixed(1)} kWh
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
 
         <div className="w-1/4 text-right">
             <div className="flex flex-col items-end">
@@ -613,7 +637,7 @@ const getHome3Forecast = useCallback(() => {
     <div className="flex justify-between items-center">
     {/* Left side - Solar panel frame */}
     <div className="w-1/2 flex justify-end pr-4">
-      <div className="w-32 h-32 bg-blue-900 rounded-lg flex items-center justify-center p-2 overflow-hidden">
+      <div className="w-24 h-24 bg-blue-900 rounded-lg flex items-center justify-center p-2 overflow-hidden">
         {/* Solar panel frame */}
         <div className="w-full h-full border-2 border-gray-700 rounded bg-blue-800 flex flex-col">
           {/* Solar cells - 3x3 grid */}
@@ -666,7 +690,7 @@ const getHome3Forecast = useCallback(() => {
         {(currentHour % 24) > 6 && (currentHour % 24) <= 18 ? (
           // Sun indicator with rays during day
           <div
-            className={`w-24 h-24 rounded-full flex items-center justify-center transition-all duration-300 ${
+            className={`w-20 h-20 rounded-full flex items-center justify-center transition-all duration-300 ${
               solarEnergyProduced > 0 ? 'opacity-100' : 'opacity-20'
             }`}
             style={{
@@ -698,7 +722,7 @@ const getHome3Forecast = useCallback(() => {
         ) : (
           // Moon indicator during night
           <div
-            className="w-24 h-24 rounded-full flex items-center justify-center bg-gray-800"
+            className="w-20 h-20 rounded-full flex items-center justify-center bg-gray-800"
             style={{
               boxShadow: '0 0 15px rgba(255, 255, 255, 0.2)'
             }}
@@ -713,10 +737,10 @@ const getHome3Forecast = useCallback(() => {
 
         {/* Weather indicators */}
         {getCurrentWeather() === 'cloudy' && (
-          <Cloud size={80} className="absolute top-10 -right-4 text-gray-400 z-10" fill="currentColor" />
+          <Cloud size={80} className="absolute top-8 -right-4 text-gray-400 z-10" fill="currentColor" />
         )}
         {getCurrentWeather() === 'stormy' && (
-          <div className="absolute top-10 -right-4 z-10">
+          <div className="absolute top-8 -right-4 z-10">
             <Cloud size={80} className="text-gray-400" fill="currentColor" />
             <div className="absolute bottom-2 left-8 text-yellow-500 text-4xl">⚡</div>
           </div>
@@ -762,35 +786,68 @@ const getHome3Forecast = useCallback(() => {
 
 
 
-    {/* Center Column - Net Consumption Chart */}
-    <div className="w-1/4 bg-white rounded-lg p-4 shadow-md flex flex-col">
-    <h2 className="text-xl font-bold text-center mb-4">Net Grid Power Flow <br />
-      <span className="text-base font-normal text-gray-700">(import positive/export negative)</span>
-    </h2>
-    <div className="flex-grow w-full mb-2">
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={getNetConsumptionForecast()}>
-          <XAxis dataKey="hour" tick={{fontSize: 10}} interval={3} label={{value: "Hours", position: "insideBottom", offset: -2}} />
-            <YAxis
-              tick={{fontSize: 10}}
-              label={{
-                value: 'kWh',
-                angle: -90
-              }}
-            />
-          <Tooltip formatter={(value, name) => {
-            return [`${Math.abs(value).toFixed(1)} kWh`, value >= 0 ? 'Importing' : 'Exporting'];
-          }} />
-          <ReferenceLine y={0} stroke="#888" strokeDasharray="3 3" />
-            <Bar dataKey="netConsumption">
-                {getNetConsumptionForecast().map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.netConsumption >= 0 ? '#ef4444' : '#22c55e'} />
-                ))}
-            </Bar>
-        </BarChart>
-      </ResponsiveContainer>
+    {/* Center Column - Chart Section */}
+    <div className="w-1/4 flex flex-col space-y-4">
+        {/* New Chart: Single Home & PV Net Flow */}
+        <div className="bg-white rounded-lg p-4 shadow-md flex flex-col flex-grow">
+            <h2 className="text-xl font-bold text-center mb-4">Single Unit Net Flow<br />
+              <span className="text-base font-normal text-gray-700">(1 Standard Home + 1 PV Panel)</span>
+            </h2>
+            <div className="flex-grow w-full mb-2">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={getSingleHomeNetForecast()}>
+                  <XAxis dataKey="hour" tick={{fontSize: 10}} interval={3} label={{value: "Hours", position: "insideBottom", offset: -2}} />
+                  <YAxis
+                      tick={{fontSize: 10}}
+                      label={{
+                        value: 'kWh',
+                        angle: -90
+                      }}
+                    />
+                  <Tooltip formatter={(value, name) => {
+                    return [`${Math.abs(value).toFixed(1)} kWh`, value >= 0 ? 'Importing' : 'Exporting'];
+                  }} />
+                  <ReferenceLine y={0} stroke="#888" strokeDasharray="3 3" />
+                  <Bar dataKey="netConsumption">
+                    {getSingleHomeNetForecast().map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.netConsumption >= 0 ? '#ef4444' : '#22c55e'} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+        </div>
+
+        {/* Existing Chart: Total Net Grid Power Flow */}
+        <div className="bg-white rounded-lg p-4 shadow-md flex flex-col flex-grow">
+            <h2 className="text-xl font-bold text-center mb-4">Community Net Power Flow <br />
+              <span className="text-base font-normal text-gray-700">(import positive/export negative)</span>
+            </h2>
+            <div className="flex-grow w-full mb-2">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={getNetConsumptionForecast()}>
+                  <XAxis dataKey="hour" tick={{fontSize: 10}} interval={3} label={{value: "Hours", position: "insideBottom", offset: -2}} />
+                    <YAxis
+                      tick={{fontSize: 10}}
+                      label={{
+                        value: 'kWh',
+                        angle: -90
+                      }}
+                    />
+                  <Tooltip formatter={(value, name) => {
+                    return [`${Math.abs(value).toFixed(1)} kWh`, value >= 0 ? 'Importing' : 'Exporting'];
+                  }} />
+                  <ReferenceLine y={0} stroke="#888" strokeDasharray="3 3" />
+                    <Bar dataKey="netConsumption">
+                        {getNetConsumptionForecast().map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={entry.netConsumption >= 0 ? '#ef4444' : '#22c55e'} />
+                        ))}
+                    </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+        </div>
     </div>
-</div>
 
 
 
