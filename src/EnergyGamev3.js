@@ -513,16 +513,16 @@ const getHome3Forecast = useCallback(() => {
                 <div className="flex justify-around items-center mt-2">
                     <div>
                         <p className="text-gray-600 font-bold">Total Consumption</p>
-                        <p className="text-2xl font-bold">{getTotalConsumption().toFixed(1)} kW</p>
+                        <p className="text-2xl font-bold">{getTotalConsumption().toFixed(1)} kWh</p>
                     </div>
                     <div>
                         <p className="text-gray-600 font-bold">Total Generation</p>
-                        <p className="text-2xl font-bold">{totalEnergyProduced.toFixed(1)} kW</p>
+                        <p className="text-2xl font-bold">{totalEnergyProduced.toFixed(1)} kWh</p>
                     </div>
                     <div>
                         <p className="text-gray-600 font-bold">{getGridInteraction() > 0 ? 'Importing from Grid' : 'Exporting to Grid'}</p>
                         <p className={`text-2xl font-bold ${getGridInteraction() > 0 ? 'text-red-500' : 'text-green-500'}`}>
-                            {Math.abs(getGridInteraction()).toFixed(1)} kW
+                            {Math.abs(getGridInteraction()).toFixed(1)} kWh
                         </p>
                     </div>
                 </div>
@@ -724,8 +724,8 @@ const getHome3Forecast = useCallback(() => {
     </div>
     </div>
 
-    <h3 className="text-xl mt-2">Photovoltaic Panel ({maxSolarPower} kW)</h3>
-	<p>Energy: <span className="font-bold">{solarPanelCount !== 0 ? (solarEnergyProduced/solarPanelCount).toFixed(1) + " kW" : "not selected"}</span></p>
+    <h3 className="text-xl mt-2">Photovoltaic Panel ({maxSolarPower} kW-peak)</h3>
+	<p>Energy: <span className="font-bold">{solarPanelCount !== 0 ? (solarEnergyProduced/solarPanelCount).toFixed(1) + " kWh" : "not selected"}</span></p>
     <p>
     {(currentHour % 24) >= 6 && (currentHour % 24) <= 18
       ? getCurrentWeather() === 'clear'
@@ -934,7 +934,7 @@ const getHome3Forecast = useCallback(() => {
       <p className="text-sm text-gray-600">Work-from-home family</p>
 
 
-	  <p className="mt-2">Real-time consumption: <span className="font-bold">{home1Count !== 0 ? (getHome1Consumption() / home1Count).toFixed(1) + " kW" : "not selected"}</span></p>
+	  <p className="mt-2">Real-time consumption: <span className="font-bold">{home1Count !== 0 ? (getHome1Consumption() / home1Count).toFixed(1) + " kWh" : "not selected"}</span></p>
 
       </div>
 
@@ -963,7 +963,7 @@ const getHome3Forecast = useCallback(() => {
 
       <h3 className="text-lg font-semibold">Standard Home</h3>
       <p className="text-sm text-gray-600">Empty during daytime</p>
-      <p className="mt-2">Real-time consumption: <span className="font-bold">{home2Count !== 0 ? (getHome2Consumption() / home2Count).toFixed(1) + " kW" : "not selected"}</span></p>
+      <p className="mt-2">Real-time consumption: <span className="font-bold">{home2Count !== 0 ? (getHome2Consumption() / home2Count).toFixed(1) + " kWh" : "not selected"}</span></p>
       </div>
 
       {/* Home 3 - Family with Children */}
@@ -991,7 +991,7 @@ const getHome3Forecast = useCallback(() => {
 
       <h3 className="text-lg font-semibold">Large Family</h3>
       <p className="text-sm text-gray-600">High evening usage</p>
-      <p className="mt-2">Real-time consumption: <span className="font-bold">{home3Count !== 0 ? (getHome3Consumption() / home3Count).toFixed(1) + " kW" : "not selected"}</span></p>
+      <p className="mt-2">Real-time consumption: <span className="font-bold">{home3Count !== 0 ? (getHome3Consumption() / home3Count).toFixed(1) + " kWh" : "not selected"}</span></p>
       </div>
 
       {/* Business Building */}
@@ -1020,7 +1020,7 @@ const getHome3Forecast = useCallback(() => {
       <h3 className="text-lg font-semibold">Local Business</h3>
       <p className="text-sm text-gray-600">Closed weekends</p>
       <p className="mt-2">Real-time consumption: <span className="font-bold">{businessCount !==
-0 ? (getBusinessConsumption() / businessCount).toFixed(1) + " kW" : "not selected"}</span></p>
+0 ? (getBusinessConsumption() / businessCount).toFixed(1) + " kWh" : "not selected"}</span></p>
       </div>
     </div>
     </div>
@@ -1059,7 +1059,7 @@ const getHome3Forecast = useCallback(() => {
 
 <div className="flex flex-col">
   <label htmlFor="maxSolarPower" className="text-sm font-medium text-gray-700 mb-1">
-    Solar Panel Capacity (kW)
+    Solar Panel Peak Capacity (kWp)
   </label>
   <div className="relative mt-1 rounded-md shadow-sm">
     <input
@@ -1075,10 +1075,10 @@ const getHome3Forecast = useCallback(() => {
       disabled={gameRunning}
     />
     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-      <span className="text-gray-500 sm:text-sm">kW</span>
+      <span className="text-gray-500 sm:text-sm">kWp</span>
     </div>
   </div>
-  <p className="mt-1 text-xs text-gray-500">Maximum power output per solar panel</p>
+  <p className="mt-1 text-xs text-gray-500">Maximum peak power per solar panel</p>
 </div>
 <br />
 
@@ -1108,7 +1108,7 @@ const getHome3Forecast = useCallback(() => {
     <button
       className="px-2 py-1 text-xs bg-gray-200 hover:bg-gray-300 rounded"
       onClick={() => {
-          const csvContent = "Hour,Day,Time,Weather,Solar Count,Home1 Count,Home2 Count,Home3 Count,Business Count,Solar Production (kW),Home1 Consumption (kW),Home2 Consumption (kW),Home3 Consumption (kW),Business Consumption (kW),Grid Interaction (kW)\n" +
+          const csvContent = "Hour,Day,Time,Weather,Solar Count,Home1 Count,Home2 Count,Home3 Count,Business Count,Solar Production (kWh),Home1 Consumption (kWh),Home2 Consumption (kWh),Home3 Consumption (kWh),Business Consumption (kWh),Grid Interaction (kWh)\n" +
           Array.from({length: currentHour + 1}, (_, i) => {
             const hour = i;
             const day = Math.floor(hour / 24) + 1;
@@ -1155,12 +1155,12 @@ const getHome3Forecast = useCallback(() => {
           <th className="p-1 border">Home2 Count</th>
           <th className="p-1 border">Home3 Count</th>
           <th className="p-1 border">Business Count</th>
-          <th className="p-1 border">Solar Production (kW)</th>
-          <th className="p-1 border">Home1 Consumption (kW)</th>
-          <th className="p-1 border">Home2 Consumption (kW)</th>
-          <th className="p-1 border">Home3 Consumption (kW)</th>
-          <th className="p-1 border">Business Consumption (kW)</th>
-          <th className="p-1 border">Grid Interaction (kW)</th>
+          <th className="p-1 border">Solar Production (kWh)</th>
+          <th className="p-1 border">Home1 Consumption (kWh)</th>
+          <th className="p-1 border">Home2 Consumption (kWh)</th>
+          <th className="p-1 border">Home3 Consumption (kWh)</th>
+          <th className="p-1 border">Business Consumption (kWh)</th>
+          <th className="p-1 border">Grid Interaction (kWh)</th>
         </tr>
       </thead>
       <tbody>
