@@ -572,7 +572,13 @@ const getHome3Forecast = useCallback(() => {
 			<div className="bg-blue-50 rounded-lg p-4 shadow flex items-center mt-0.5">
 				<div className="mr-4">
 					<p className="text-xl font-normal text-gray-600 font-bold">Community</p>
-					<p className="text-sm font-normal text-gray-700">({home1Count + home2Count + home3Count} Homes, {businessCount} Business, {solarPanelCount} PV)</p>
+					<div className="text-left">
+						<p className="text-sm font-normal text-gray-700">{home1Count} Smart-Working Home</p>
+						<p className="text-sm font-normal text-gray-700">{home2Count} Standard Home</p>
+						<p className="text-sm font-normal text-gray-700">{home3Count} Large Family</p>
+						<p className="text-sm font-normal text-gray-700">{businessCount} Business</p>
+						<p className="text-sm font-normal text-gray-700">{solarPanelCount} PV Panel</p>
+					</div>
 				</div>
 				<div className="flex justify-around items-center flex-grow">
 					<div>
