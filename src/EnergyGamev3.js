@@ -570,7 +570,10 @@ const getHome3Forecast = useCallback(() => {
             </div>
 
 			<div className="bg-blue-50 rounded-lg p-4 shadow flex items-center mt-0.5">
-				<span className="text-xl font-normal text-gray-600 mr-4 font-bold">Community</span>
+				<div className="mr-4">
+					<p className="text-xl font-normal text-gray-600 font-bold">Community</p>
+					<p className="text-sm font-normal text-gray-700">({home1Count + home2Count + home3Count} Homes, {businessCount} Business, {solarPanelCount} PV)</p>
+				</div>
 				<div className="flex justify-around items-center flex-grow">
 					<div>
 						<p className="text-gray-600 font-bold">Total Consumption</p>
