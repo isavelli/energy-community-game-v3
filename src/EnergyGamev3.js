@@ -598,11 +598,11 @@ const getHome3Forecast = useCallback(() => {
             <YAxis
               tick={{fontSize: 10}}
               label={{
-                value: 'kW',
+                value: 'kWh',
                 angle: -90
               }}
             />
-        <Tooltip formatter={(value) => [`${value.toFixed(1)} kW`, 'Solar']} />
+        <Tooltip formatter={(value) => [`${value.toFixed(1)} kWh`, 'Solar']} />
         <Bar dataKey="production" fill="#f59e0b" />
       </BarChart>
     </ResponsiveContainer>
@@ -754,12 +754,12 @@ const getHome3Forecast = useCallback(() => {
             <YAxis
               tick={{fontSize: 10}}
               label={{
-                value: 'kW',
+                value: 'kWh',
                 angle: -90
               }}
             />
           <Tooltip formatter={(value, name) => {
-            return [`${Math.abs(value).toFixed(1)} kW`, value >= 0 ? 'Importing' : 'Exporting'];
+            return [`${Math.abs(value).toFixed(1)} kWh`, value >= 0 ? 'Importing' : 'Exporting'];
           }} />
           <ReferenceLine y={0} stroke="#888" strokeDasharray="3 3" />
             <Bar dataKey="netConsumption">
@@ -916,11 +916,11 @@ const getHome3Forecast = useCallback(() => {
         <YAxis
           tick={{fontSize: 10}}
           label={{
-            value: 'kW',
+            value: 'kWh',
             angle: -90
           }}
         />
-          <Tooltip formatter={(value) => [`${value.toFixed(1)} kW`, 'Consumption']} />
+          <Tooltip formatter={(value) => [`${value.toFixed(1)} kWh`, 'Consumption']} />
           <Bar dataKey="consumption" fill="#2563eb" />
         </BarChart>
         </ResponsiveContainer>
@@ -947,11 +947,11 @@ const getHome3Forecast = useCallback(() => {
         <YAxis
           tick={{fontSize: 10}}
           label={{
-            value: 'kW',
+            value: 'kWh',
             angle: -90
           }}
         />
-          <Tooltip formatter={(value) => [`${value.toFixed(1)} kW`, 'Consumption']} />
+          <Tooltip formatter={(value) => [`${value.toFixed(1)} kWh`, 'Consumption']} />
           <Bar dataKey="consumption" fill="#f59e0b" />
         </BarChart>
         </ResponsiveContainer>
@@ -975,11 +975,11 @@ const getHome3Forecast = useCallback(() => {
         <YAxis
           tick={{fontSize: 10}}
           label={{
-            value: 'kW',
+            value: 'kWh',
             angle: -90
           }}
         />
-          <Tooltip formatter={(value) => [`${value.toFixed(1)} kW`, 'Consumption']} />
+          <Tooltip formatter={(value) => [`${value.toFixed(1)} kWh`, 'Consumption']} />
           <Bar dataKey="consumption" fill="#10b981" />
         </BarChart>
         </ResponsiveContainer>
@@ -1003,11 +1003,11 @@ const getHome3Forecast = useCallback(() => {
         <YAxis
           tick={{fontSize: 10}}
           label={{
-            value: 'kW',
+            value: 'kWh',
             angle: -90
           }}
         />
-          <Tooltip formatter={(value) => [`${value.toFixed(1)} kW`, 'Consumption']} />
+          <Tooltip formatter={(value) => [`${value.toFixed(1)} kWh`, 'Consumption']} />
           <Bar dataKey="consumption" fill="#8b5cf6" />
         </BarChart>
         </ResponsiveContainer>
