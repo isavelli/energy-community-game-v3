@@ -1,28 +1,11 @@
 import React, { useState, useEffect, useCallback, useRef, useMemo} from 'react';
-import { Wind, Home, Sun, Cloud, Store} from 'lucide-react';
+import { Home, Sun, Cloud, Store} from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine  } from 'recharts';
 
 
 const EnergyGamev2 = () => {
   // Week-long simulation data (24 hours * 7 days = 168 hours)
   const weekData = useMemo(() => ({
-    // Wind speed in m/s for each hour of the week
-    windSpeed: [
-      // Day 1
-      1, 2, 2, 3, 4, 3, 2, 2, 3, 4, 5, 4, 3, 4, 5, 6, 5, 4, 3, 2, 2, 1, 1, 2,
-      // Day 2
-      2, 3, 3, 2, 1, 2, 3, 4, 5, 6, 6, 5, 4, 3, 2, 3, 4, 3, 2, 2, 3, 4, 3, 2,
-      // Day 3
-      1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 8, 7, 6, 5, 4, 4, 5, 6, 5, 4, 3, 4, 2, 1,
-      // Day 4
-      1, 2, 3, 4, 3, 2, 3, 4, 5, 4, 3, 2, 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 4, 4,
-      // Day 5
-      2, 3, 4, 5, 6, 7, 8, 7, 6, 5, 4, 3, 4, 5, 6, 5, 4, 3, 2, 1, 2, 3, 4, 4,
-      // Day 6
-      1, 1, 4, 7, 8, 9, 9, 6, 5, 4, 3, 4, 5, 6, 7, 8, 7, 6, 5, 4, 3, 2, 1, 1,
-      // Day 7
-      2, 3, 4, 3, 2, 1, 2, 3, 4, 5, 6, 7, 8, 7, 6, 5, 4, 3, 2, 1, 2, 3, 2, 1
-    ],
     // Weather conditions for each hour of the week
     weather: [
       // Day 1
@@ -146,7 +129,6 @@ const EnergyGamev2 = () => {
   const [gameSpeed, setGameSpeed] = useState(1); // Default speed is 1x
   
   // Asset counts
-  const [windFarmCount, setWindFarmCount] = useState(0);
   const [solarPanelCount, setSolarPanelCount] = useState(0);
   const [home1Count, setHome1Count] = useState(0);
   const [home2Count, setHome2Count] = useState(0);
@@ -154,16 +136,9 @@ const EnergyGamev2 = () => {
   const [businessCount, setBusinessCount] = useState(0);
 
   // Max power values
-  const [maxWindPower, setMaxWindPower] = useState(10); // kW per wind farm
   const [maxSolarPower, setMaxSolarPower] = useState(10); // kW per solar panel
   
   const [showDebug, setShowDebug] = useState(false); // Toggle for debug information
-
-  // Calculate wind energy production based on hour and count
-  const calculateWindProduction = useCallback((hour, count) => {
-    const windSpeed = weekData.windSpeed[hour];
-    return maxWindPower * Math.max(0, windSpeed / 9) * count;
-  }, [weekData.windSpeed, maxWindPower]);
 
   // Calculate solar energy production based on hour, weather and count
   const calculateSolarProduction = useCallback((hour, count) => {
@@ -191,7 +166,6 @@ const EnergyGamev2 = () => {
     return 0;
   }, [weekData.weather, maxSolarPower]);
 
-  const [windEnergyProduced, setWindEnergyProduced] = useState(0);
   const [solarEnergyProduced, setSolarEnergyProduced] = useState(0);
   const [totalEnergyProduced, setTotalEnergyProduced] = useState(0);
   
@@ -249,9 +223,8 @@ const EnergyGamev2 = () => {
 
   // Initialize energy production and consumption on component mount
   useEffect(() => {
-    const initialWindProduction = calculateWindProduction(0, windFarmCount);
     const initialSolarProduction = calculateSolarProduction(0, solarPanelCount);
-    const initialTotalProduction = initialWindProduction + initialSolarProduction;
+    const initialTotalProduction = initialSolarProduction;
     
     const initialHome1Consumption = calculateHome1Consumption(0);
     const initialHome2Consumption = calculateHome2Consumption(0);
@@ -261,7 +234,6 @@ const EnergyGamev2 = () => {
                                     initialHome3Consumption + initialBusinessConsumption;
     
     // Initialize production and consumption values without affecting money
-    setWindEnergyProduced(initialWindProduction);
     setSolarEnergyProduced(initialSolarProduction);
     setTotalEnergyProduced(initialTotalProduction);
     
@@ -272,9 +244,9 @@ const EnergyGamev2 = () => {
     setTotalEnergyConsumed(initialTotalConsumption);
     
     // Money will be calculated in the game loop when started
-  }, [calculateWindProduction, calculateSolarProduction, calculateHome1Consumption, 
+  }, [calculateSolarProduction, calculateHome1Consumption, 
       calculateHome2Consumption, calculateHome3Consumption, calculateBusinessConsumption, 
-      windFarmCount, solarPanelCount]);
+      solarPanelCount]);
 
   // Format time to display - memoized to avoid recreation on each render
   const formatHour = useCallback((hour) => {
@@ -286,11 +258,6 @@ const EnergyGamev2 = () => {
     return weekData.weather[currentHour];
   }, [weekData.weather, currentHour]);
 
-  // Get current wind speed for display - memoized
-  const getCurrentWindSpeed = useCallback(() => {
-    return weekData.windSpeed[currentHour];
-  }, [weekData.windSpeed, currentHour]);
-
   // Calculate grid interaction - memoized 
   const getGridInteraction = useCallback(() => {
     return getTotalConsumption() - totalEnergyProduced;
@@ -300,7 +267,7 @@ const EnergyGamev2 = () => {
   const getNetConsumptionForecast = useCallback(() => {
     const forecast = [];
     for (let i = 0; i < 24; i++) {
-      const hour = (currentHour + i) % weekData.windSpeed.length;
+      const hour = (currentHour + i) % weekData.weather.length;
       const time = (currentHour + i) % 24;
       
       // Get consumption values
@@ -310,12 +277,11 @@ const EnergyGamev2 = () => {
       const businessConsumption = calculateBusinessConsumption(hour);
       
       // Use utility functions to calculate production
-      const windProduction = calculateWindProduction(hour, windFarmCount);
       const solarProduction = calculateSolarProduction(hour, solarPanelCount);
       
       // Calculate total consumption and production
       const totalConsumption = home1Consumption + home2Consumption + home3Consumption + businessConsumption;
-      const totalProduction = windProduction + solarProduction;
+      const totalProduction = solarProduction;
       
       // Net consumption (positive means importing, negative means exporting)
       const netConsumption = totalConsumption - totalProduction;
@@ -330,22 +296,7 @@ const EnergyGamev2 = () => {
     return forecast;
   }, [currentHour, weekData, calculateHome1Consumption, calculateHome2Consumption, 
       calculateHome3Consumption, calculateBusinessConsumption,
-      windFarmCount, solarPanelCount, calculateWindProduction, calculateSolarProduction]);
-
-  // Get wind forecast data for the next 24 hours - memoized
-  const getWindForecast = useCallback(() => {
-    const forecast = [];
-    for (let i = 0; i < 24; i++) {
-      const hour = (currentHour + i) % weekData.windSpeed.length;
-      // Use utility function with count=1 since this is a forecast per unit
-      const production = calculateWindProduction(hour, 1);
-      forecast.push({
-        hour: (currentHour + i) % 24,
-        production: production
-      });
-    }
-    return forecast;
-  }, [currentHour, calculateWindProduction, weekData.windSpeed.length]);
+      solarPanelCount, calculateSolarProduction]);
 
   const getSolarForecast = useCallback(() => {
     const forecast = [];
@@ -425,11 +376,9 @@ const getHome3Forecast = useCallback(() => {
     setGameSpeed(1);
     setHourStarted(false);
 	
-	setMaxWindPower(10); // kW per wind farm
     setMaxSolarPower(10); // kW per solar panel
     
     // Reset asset counts
-    setWindFarmCount(0);
     setSolarPanelCount(0);
     setHome1Count(0);
     setHome2Count(0);
@@ -457,7 +406,6 @@ const getHome3Forecast = useCallback(() => {
     setShowDebug(false); // Uncheck debug checkbox
     
     // Calculate initial production values (with zero assets)
-    const initialWindProduction = calculateWindProduction(0, 0);
     const initialSolarProduction = calculateSolarProduction(0, 0);
     
     // Calculate initial consumption values (with zero assets)
@@ -469,9 +417,8 @@ const getHome3Forecast = useCallback(() => {
                                   initialHome3Consumption + initialBusinessConsumption;
     
     // Set initial energy production values
-    setWindEnergyProduced(initialWindProduction);
     setSolarEnergyProduced(initialSolarProduction);
-    setTotalEnergyProduced(initialWindProduction + initialSolarProduction);
+    setTotalEnergyProduced(initialSolarProduction);
     
     // Set initial consumption values
     setHome1EnergyConsumed(initialHome1Consumption);
@@ -483,7 +430,7 @@ const getHome3Forecast = useCallback(() => {
     // Reset time accumulators and refs
     timeAccumulatorRef.current = 0;
     lastDayTransitionRef.current = null;
-  }, [calculateWindProduction, calculateSolarProduction, calculateHome1Consumption, 
+  }, [calculateSolarProduction, calculateHome1Consumption, 
       calculateHome2Consumption, calculateHome3Consumption, calculateBusinessConsumption, buyPrice, sellPrice]);
 
   // Track values for the current hour and animation
@@ -497,17 +444,15 @@ const getHome3Forecast = useCallback(() => {
   useEffect(() => {
     // Only update if the game is running to avoid unnecessary calculations
     if (gameRunning) {
-      // Recalculate wind and solar production with new counts
-      const windProduction = calculateWindProduction(currentHour, windFarmCount);
+      // Recalculate solar production with new counts
       const solarProduction = calculateSolarProduction(currentHour, solarPanelCount);
       
       // Update the state with new values
-      setWindEnergyProduced(windProduction);
       setSolarEnergyProduced(solarProduction);
-      setTotalEnergyProduced(windProduction + solarProduction);
+      setTotalEnergyProduced(solarProduction);
     }
-  }, [windFarmCount, solarPanelCount, gameRunning, currentHour, 
-      calculateWindProduction, calculateSolarProduction]);
+  }, [solarPanelCount, gameRunning, currentHour, 
+      calculateSolarProduction]);
 
   // Effect to update consumption values when consumer counts change
   useEffect(() => {
@@ -536,17 +481,15 @@ const getHome3Forecast = useCallback(() => {
   useEffect(() => {
     // Only update if the game is running to avoid unnecessary calculations
     if (gameRunning) {
-      // Recalculate wind and solar production with new max power values
-      const windProduction = calculateWindProduction(currentHour, windFarmCount);
+      // Recalculate solar production with new max power values
       const solarProduction = calculateSolarProduction(currentHour, solarPanelCount);
       
       // Update the state with new values
-      setWindEnergyProduced(windProduction);
       setSolarEnergyProduced(solarProduction);
-      setTotalEnergyProduced(windProduction + solarProduction);
+      setTotalEnergyProduced(solarProduction);
     }
-  }, [maxWindPower, maxSolarPower, gameRunning, currentHour, 
-      windFarmCount, solarPanelCount, calculateWindProduction, calculateSolarProduction]);
+  }, [maxSolarPower, gameRunning, currentHour, 
+      solarPanelCount, calculateSolarProduction]);
 
   // Handle game logic with split rendering and game hour cycles
   useEffect(() => {
@@ -563,12 +506,11 @@ const getHome3Forecast = useCallback(() => {
         const businessConsumption = calculateBusinessConsumption(currentHour);
         const totalConsumption = home1Consumption + home2Consumption + home3Consumption + businessConsumption;
         
-        // Calculate wind and solar production using utility functions
-        const windProduction = calculateWindProduction(currentHour, windFarmCount);
+        // Calculate solar production using utility functions
         const solarProduction = calculateSolarProduction(currentHour, solarPanelCount);
         
         // Calculate total energy production
-        const totalProduction = windProduction + solarProduction;
+        const totalProduction = solarProduction;
         
         // Calculate grid interaction (grid imbalance)
         const gridInteraction = totalConsumption - totalProduction;
@@ -689,7 +631,6 @@ const getHome3Forecast = useCallback(() => {
         setHourStarted(true);
         
         // Update all energy state values
-        setWindEnergyProduced(windProduction);
         setSolarEnergyProduced(solarProduction);
         setTotalEnergyProduced(totalProduction);
         
@@ -706,7 +647,6 @@ const getHome3Forecast = useCallback(() => {
             gridInteraction: gridInteraction.toFixed(2),
             financialImpact: financialImpact.toFixed(2),
             solarProduction: solarProduction.toFixed(2),
-            windProduction: windProduction.toFixed(2),
             totalConsumption: totalConsumption.toFixed(2),
             newBalance: newBalance.toFixed(2)
           });
@@ -722,7 +662,7 @@ const getHome3Forecast = useCallback(() => {
         setCurrentHour(prevHour => {
           const nextHour = prevHour + 1;
           
-          if (nextHour >= weekData.windSpeed.length) {
+          if (nextHour >= weekData.weather.length) {
             // End of week, stop the game
             setGameRunning(false);
             return prevHour;
@@ -751,7 +691,7 @@ const getHome3Forecast = useCallback(() => {
       generationHistory, consumptionHistory, communityPriceHistory,
       generationCommunityHistory, consumptionCommunityHistory,
       weekData, hourStarted, gameSpeed, showDebug,
-      windFarmCount, solarPanelCount, calculateWindProduction, calculateSolarProduction,
+      solarPanelCount, calculateSolarProduction,
       calculateHome1Consumption, calculateHome2Consumption, calculateHome3Consumption, 
       calculateBusinessConsumption]);
 
@@ -880,7 +820,7 @@ const getHome3Forecast = useCallback(() => {
 
 
          
-      {/* Main components layout - side-by-side with wind/solar on left and homes on right */}
+      {/* Main components layout - side-by-side with solar on left and homes on right */}
       <div className="flex flex-row space-x-4">
         {/* Left Column - Energy Sources */}
         <div className="flex flex-col space-y-8 w-1/4">
@@ -888,42 +828,8 @@ const getHome3Forecast = useCallback(() => {
 		<div className="border border-gray-300 rounded-lg p-3 mb-3 bg-gray-50">
         <h2 className="text-xl font-bold text-center mb-4">Generators</h2>
 		
-		<div className="flex flex-col items-center justify-center bg-white rounded-lg p-4 shadow-md border-2 border-blue-300 mb-4">
-        {/* Wind Farm Section */}
-        <div className="text-center w-full">
-          {/* Wind Production Forecast Chart */}
-          <div className="h-32 w-full mb-2">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={getWindForecast()}>
-            <XAxis dataKey="hour" tick={{fontSize: 10}} interval={3}  label={{value: "Hours", position: "insideBottom", offset: -2}} />
-            <YAxis 
-              tick={{fontSize: 10}}
-              label={{ 
-                value: 'kW', 
-                angle: -90
-              }}
-            />
-            <Tooltip formatter={(value) => [`${value.toFixed(1)} kW`, 'Wind']} />
-            <Line type="monotone" dataKey="production" stroke="#3b82f6" strokeWidth={2} dot={false} />
-            </LineChart>
-          </ResponsiveContainer>
-          </div>
-          <div className="flex justify-center items-center">
-          <div className="w-32 h-32 bg-gray-200 rounded-full flex items-center justify-center">
-            <Wind 
-            size={80} 
-            className="text-blue-500" 
-            style={{ width: `${20 + getCurrentWindSpeed() * 20}px` }} 
-            />
-          </div>
-          </div>
-          <h3 className="text-xl mt-2">Wind Turbine ({maxWindPower} kW)</h3>
-          <p>Wind Speed: {getCurrentWindSpeed()} m/s</p>	  
-		  <p>Energy: <span className="font-bold">{windFarmCount !== 0 ? (windEnergyProduced/windFarmCount).toFixed(1) + " kW" : "not selected"}</span></p>
-        </div>
-		</div>
-		
 
+		
 
 
     {/* Solar Panel Section */}
@@ -1232,28 +1138,6 @@ const getHome3Forecast = useCallback(() => {
   {/* Generators Label */}
   <h5 className="text-lg font-semibold mb-2 text-left border-b pb-1">Generators</h5>
   
-{/* Wind Farm Controls */}
-  <div className="flex items-center justify-between mb-2 p-2 bg-blue-50 rounded">
-    <span className="text-sm text-blue-700 font-semibold">Wind Turbines:</span>
-    <div className="flex items-center">
-      <button 
-        className="w-8 h-8 bg-blue-500 text-white rounded-l flex items-center justify-center hover:bg-blue-600"
-        onClick={() => setWindFarmCount(Math.max(0, windFarmCount - 1))}
-      >
-        -
-      </button>
-      <span className="w-8 h-8 bg-white flex items-center justify-center border-t border-b">
-        {windFarmCount}
-      </span>
-      <button 
-        className="w-8 h-8 bg-blue-500 text-white rounded-r flex items-center justify-center hover:bg-blue-600"
-        onClick={() => setWindFarmCount(windFarmCount + 1)}
-      >
-        +
-      </button>
-    </div>
-  </div>
-  
   {/* Solar Panel Controls */}
   <div className="flex items-center justify-between mb-2 p-2 bg-yellow-50 rounded">
     <span className="text-sm text-yellow-700 font-semibold">Photovoltaic Panels:</span>
@@ -1422,7 +1306,6 @@ const getHome3Forecast = useCallback(() => {
     <li><span className="font-semibold">Home 2:</span> House of a worker with morning/evening peaks and low daytime usage</li>
     <li><span className="font-semibold">Home 3:</span> Family with children pattern showing higher overall consumption</li>
     <li><span className="font-semibold">Business:</span> Daytime-only usage on weekdays, reduced weekend operation</li>
-    <li><span className="font-semibold">Wind turbine:</span> Wind farm with intermittent generation through the day</li>
     <li><span className="font-semibold">Photovoltaic panel:</span> Photovoltaic panel with intermittent generation during daylight</li>
   </ul>
 </div> 
@@ -1431,7 +1314,7 @@ const getHome3Forecast = useCallback(() => {
   <h3 className="font-bold mb-2">How to Play:</h3>
   <ul className="list-disc pl-5">
     <li>Observe the different consumption patterns of each consumer</li>
-    <li>Watch how wind and solar energy production fluctuates with weather conditions</li>
+    <li>Watch how solar energy production fluctuates with weather conditions</li>
     <li>Electricity can be bought from the grid at €{buyPrice.toFixed(2)}/kWh when needed</li>
     <li>Excess electricity is sold to the grid at €{sellPrice.toFixed(2)}/kWh when you produce more than you need</li>
     <li>Your goal: Build your Energy Community and find the best combination!</li>
@@ -1514,31 +1397,6 @@ const getHome3Forecast = useCallback(() => {
   <br />
 
   
-  <div className="flex flex-col">
-  <label htmlFor="maxWindPower" className="text-sm font-medium text-gray-700 mb-1">
-    Wind Turbine Capacity (kW)
-  </label>
-  <div className="relative mt-1 rounded-md shadow-sm">
-    <input
-      type="number"
-      id="maxWindPower"
-      min="1"
-      step="1"
-      max="50"
-      value={maxWindPower}
-      onChange={(e) => setMaxWindPower(Number(e.target.value))}
-      className="block w-full rounded-md border-gray-300 pr-12 focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-      placeholder="10"
-      disabled={gameRunning}
-    />
-    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-      <span className="text-gray-500 sm:text-sm">kW</span>
-    </div>
-  </div>
-  <p className="mt-1 text-xs text-gray-500">Maximum power output per wind turbine</p>
-</div>
-<br />
-
 <div className="flex flex-col">
   <label htmlFor="maxSolarPower" className="text-sm font-medium text-gray-700 mb-1">
     Solar Panel Capacity (kW)
@@ -1590,20 +1448,18 @@ const getHome3Forecast = useCallback(() => {
     <button 
       className="px-2 py-1 text-xs bg-gray-200 hover:bg-gray-300 rounded"
       onClick={() => navigator.clipboard.writeText(
-        "Hour,Day,Time,Wind Speed,Weather,Wind Count,Solar Count,Home1 Count,Home2 Count,Home3 Count,Business Count,Wind Production (kW),Solar Production (kW),Home1 Consumption (kW),Home2 Consumption (kW),Home3 Consumption (kW),Business Consumption (kW),Grid Interaction (kW),Standalone Balance Cumulative (€),Standalone Generation Revenue Cumulative (€),Standalone Consumption Cost Cumulative (€),Community Price (€/kWh),Community Balance Cumulative (€),Community Generation Revenue Cumulative(€),Community Consumption Cost Cumulative(€)\n" +
+        "Hour,Day,Time,Weather,Solar Count,Home1 Count,Home2 Count,Home3 Count,Business Count,Solar Production (kW),Home1 Consumption (kW),Home2 Consumption (kW),Home3 Consumption (kW),Business Consumption (kW),Grid Interaction (kW),Standalone Balance Cumulative (€),Standalone Generation Revenue Cumulative (€),Standalone Consumption Cost Cumulative (€),Community Price (€/kWh),Community Balance Cumulative (€),Community Generation Revenue Cumulative(€),Community Consumption Cost Cumulative(€)\n" +
         Array.from({length: currentHour + 1}, (_, i) => {
           const hour = i;
           const day = Math.floor(hour / 24) + 1;
           const time = hour % 24;
-          const windSpeed = weekData.windSpeed[hour];
           const weather = weekData.weather[hour];
-          const windProduction = calculateWindProduction(hour, windFarmCount);
           const solarProduction = calculateSolarProduction(hour, solarPanelCount);
           const home1Consumption = calculateHome1Consumption(hour);
           const home2Consumption = calculateHome2Consumption(hour);
           const home3Consumption = calculateHome3Consumption(hour);
           const businessConsumption = calculateBusinessConsumption(hour);
-          const totalProduction = windProduction + solarProduction;
+          const totalProduction = solarProduction;
           const totalConsumption = home1Consumption + home2Consumption + home3Consumption + businessConsumption;
           const gridInteraction = totalConsumption - totalProduction;
           // Cash balance from history for this hour
@@ -1614,7 +1470,7 @@ const getHome3Forecast = useCallback(() => {
           const historicalCommunityPrice = communityPriceHistory[hour] !== undefined ? communityPriceHistory[hour] : communityPrice;
           const historicalCommunityGeneration = generationCommunityHistory[hour] !== undefined ? generationCommunityHistory[hour] : generationCommunity;
           const historicalCommunityConsumption = consumptionCommunityHistory[hour] !== undefined ? consumptionCommunityHistory[hour] : consumptionCommunity;
-          return `${hour},${day},${time}:00,${windSpeed},${weather},${windFarmCount},${solarPanelCount},${home1Count},${home2Count},${home3Count},${businessCount},${windProduction.toFixed(2)},${solarProduction.toFixed(2)},${home1Consumption.toFixed(2)},${home2Consumption.toFixed(2)},${home3Consumption.toFixed(2)},${businessConsumption.toFixed(2)},${gridInteraction.toFixed(2)},${historicalStandaloneBalance.toFixed(2)},${historicalGenerationRevenue.toFixed(2)},${historicalConsumptionCost.toFixed(2)},${historicalCommunityPrice.toFixed(2)},${historicalCashBalance.toFixed(2)},${historicalCommunityGeneration.toFixed(2)},${historicalCommunityConsumption.toFixed(2)}`;
+          return `${hour},${day},${time}:00,${weather},${solarPanelCount},${home1Count},${home2Count},${home3Count},${businessCount},${solarProduction.toFixed(2)},${home1Consumption.toFixed(2)},${home2Consumption.toFixed(2)},${home3Consumption.toFixed(2)},${businessConsumption.toFixed(2)},${gridInteraction.toFixed(2)},${historicalStandaloneBalance.toFixed(2)},${historicalGenerationRevenue.toFixed(2)},${historicalConsumptionCost.toFixed(2)},${historicalCommunityPrice.toFixed(2)},${historicalCashBalance.toFixed(2)},${historicalCommunityGeneration.toFixed(2)},${historicalCommunityConsumption.toFixed(2)}`;
         }).join("\n")
       )}
     >
@@ -1629,15 +1485,12 @@ const getHome3Forecast = useCallback(() => {
           <th className="p-1 border">Hour</th>
           <th className="p-1 border">Day</th>
           <th className="p-1 border">Time</th>
-          <th className="p-1 border">Wind (m/s)</th>
           <th className="p-1 border">Weather</th>
-          <th className="p-1 border">Wind Count</th>
           <th className="p-1 border">Solar Count</th>
           <th className="p-1 border">Home1 Count</th>
           <th className="p-1 border">Home2 Count</th>
           <th className="p-1 border">Home3 Count</th>
           <th className="p-1 border">Business Count</th>
-          <th className="p-1 border">Wind Production (kW)</th>
           <th className="p-1 border">Solar Production (kW)</th>
           <th className="p-1 border">Home1 Consumption (kW)</th>
           <th className="p-1 border">Home2 Consumption (kW)</th>
@@ -1658,15 +1511,13 @@ const getHome3Forecast = useCallback(() => {
           const hour = i;
           const day = Math.floor(hour / 24) + 1;
           const time = hour % 24;
-          const windSpeed = weekData.windSpeed[hour];
           const weather = weekData.weather[hour];
-          const windProduction = calculateWindProduction(hour, windFarmCount);
           const solarProduction = calculateSolarProduction(hour, solarPanelCount);
           const home1Consumption = calculateHome1Consumption(hour);
           const home2Consumption = calculateHome2Consumption(hour);
           const home3Consumption = calculateHome3Consumption(hour);
           const businessConsumption = calculateBusinessConsumption(hour);
-          const totalProduction = windProduction + solarProduction;
+          const totalProduction = solarProduction;
           const totalConsumption = home1Consumption + home2Consumption + home3Consumption + businessConsumption;
           const gridInteraction = totalConsumption - totalProduction;
           
@@ -1675,15 +1526,12 @@ const getHome3Forecast = useCallback(() => {
               <td className="p-1 border text-center">{hour}</td>
               <td className="p-1 border text-center">{day}</td>
               <td className="p-1 border text-center">{time}:00</td>
-              <td className="p-1 border text-center">{windSpeed}</td>
               <td className="p-1 border text-center">{weather}</td>
-              <td className="p-1 border text-center">{windFarmCount}</td>
               <td className="p-1 border text-center">{solarPanelCount}</td>
               <td className="p-1 border text-center">{home1Count}</td>
               <td className="p-1 border text-center">{home2Count}</td>
               <td className="p-1 border text-center">{home3Count}</td>
               <td className="p-1 border text-center">{businessCount}</td>
-              <td className="p-1 border text-right">{windProduction.toFixed(2)}</td>
               <td className="p-1 border text-right">{solarProduction.toFixed(2)}</td>
               <td className="p-1 border text-right">{home1Consumption.toFixed(2)}</td>
               <td className="p-1 border text-right">{home2Consumption.toFixed(2)}</td>
