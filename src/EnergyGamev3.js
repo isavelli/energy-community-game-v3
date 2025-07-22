@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef, useMemo} from 'react';
 import { Home, Sun, Cloud, Store} from 'lucide-react';
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine  } from 'recharts';
+import { BarChart, Bar, Cell, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine  } from 'recharts';
 
 
 const EnergyGridSimulator = () => {
@@ -9,7 +9,7 @@ const EnergyGridSimulator = () => {
     // Weather conditions for each hour of the week
     weather: [
       // Day 1
-      'clear', 'clear', 'clear', 'clear', 'clear', 'clear', 'clear', 'clear', 'clear', 'clear', 'clear', 'clear', 
+      'clear', 'clear', 'clear', 'clear', 'clear', 'clear', 'clear', 'clear', 'clear', 'clear', 'clear', 'clear',
       'cloudy', 'cloudy', 'cloudy', 'cloudy', 'cloudy', 'cloudy', 'cloudy', 'cloudy', 'cloudy', 'cloudy', 'cloudy', 'cloudy',
       // Day 2
       'cloudy', 'cloudy', 'cloudy', 'cloudy', 'cloudy', 'cloudy', 'clear', 'clear', 'clear', 'clear', 'clear', 'clear',
@@ -31,7 +31,7 @@ const EnergyGridSimulator = () => {
       'clear', 'clear', 'clear', 'clear', 'clear', 'clear', 'clear', 'clear', 'cloudy', 'cloudy', 'cloudy', 'cloudy'
     ],
 
-    
+
     // Home 1 consumption in kW for each hour of the week (work-from-home pattern)
     home1Consumption: [
       1.00, 1.00, 1.00, 1.00, 1.33, 1.66, 1.99, 2.64, 2.97, 2.97, 2.97, 2.64, 2.31, 2.64, 2.97, 2.64, 2.31, 1.99, 2.97, 2.64, 2.31, 1.66, 1.33, 1.00,
@@ -45,19 +45,19 @@ const EnergyGridSimulator = () => {
 
     // Home 2 consumption in kW for each hour of the week (office worker pattern)
     home2Consumption: [
-      1.33, 1.33, 1.33, 1.33, 1.33, 1.66, 3.30, 2.97, 2.31, 1.00, 1.00, 1.00, 
+      1.33, 1.33, 1.33, 1.33, 1.33, 1.66, 3.30, 2.97, 2.31, 1.00, 1.00, 1.00,
       1.00, 1.00, 1.00, 1.00, 1.33, 2.31, 3.30, 2.97, 2.64, 1.99, 1.66, 1.33,
-      1.33, 1.33, 1.33, 1.33, 1.33, 1.66, 3.30, 2.97, 2.31, 1.00, 1.00, 1.00, 
+      1.33, 1.33, 1.33, 1.33, 1.33, 1.66, 3.30, 2.97, 2.31, 1.00, 1.00, 1.00,
       1.00, 1.00, 1.00, 1.00, 1.33, 2.31, 3.30, 2.97, 2.64, 1.99, 1.66, 1.33,
-      1.33, 1.33, 1.33, 1.33, 1.33, 1.66, 3.30, 2.97, 2.31, 1.00, 1.00, 1.00, 
+      1.33, 1.33, 1.33, 1.33, 1.33, 1.66, 3.30, 2.97, 2.31, 1.00, 1.00, 1.00,
       1.00, 1.00, 1.00, 1.00, 1.33, 2.31, 3.30, 2.97, 2.64, 1.99, 1.66, 1.33,
-      1.33, 1.33, 1.33, 1.33, 1.33, 1.66, 3.30, 2.97, 2.31, 1.00, 1.00, 1.00, 
+      1.33, 1.33, 1.33, 1.33, 1.33, 1.66, 3.30, 2.97, 2.31, 1.00, 1.00, 1.00,
       1.00, 1.00, 1.00, 1.00, 1.33, 2.31, 3.30, 2.97, 2.64, 1.99, 1.66, 1.33,
-      1.33, 1.33, 1.33, 1.33, 1.33, 1.66, 3.30, 2.97, 2.31, 1.00, 1.00, 1.00, 
+      1.33, 1.33, 1.33, 1.33, 1.33, 1.66, 3.30, 2.97, 2.31, 1.00, 1.00, 1.00,
       1.00, 1.00, 1.00, 1.00, 1.33, 2.31, 3.30, 2.97, 2.64, 1.99, 1.66, 1.33,
-      1.33, 1.33, 1.33, 1.33, 1.66, 1.66, 1.99, 2.31, 2.64, 2.97, 2.97, 2.64, 
+      1.33, 1.33, 1.33, 1.33, 1.66, 1.66, 1.99, 2.31, 2.64, 2.97, 2.97, 2.64,
       2.31, 2.64, 2.64, 2.31, 1.99, 2.97, 3.30, 2.97, 2.64, 2.31, 1.66, 1.33,
-      1.33, 1.33, 1.33, 1.33, 1.66, 1.66, 1.99, 2.31, 2.64, 2.97, 2.97, 2.64, 
+      1.33, 1.33, 1.33, 1.33, 1.66, 1.66, 1.99, 2.31, 2.64, 2.97, 2.97, 2.64,
       2.31, 2.64, 2.64, 2.31, 1.99, 2.97, 3.30, 2.97, 2.64, 2.31, 1.66, 1.33
     ],
 
@@ -87,7 +87,7 @@ const EnergyGridSimulator = () => {
       // Day 2
       1, 1, 1, 1, 1, 1, 2, 5, 8, 10, 10, 10, 10, 10, 10, 8, 5, 4, 3, 2, 1, 1, 1, 1,
       // Day 3
-      1, 1, 1, 1, 1, 1, 2, 5, 8, 10, 10, 10, 10, 10, 10, 8, 5, 4, 3, 2, 1, 1, 1, 1,	
+      1, 1, 1, 1, 1, 1, 2, 5, 8, 10, 10, 10, 10, 10, 10, 8, 5, 4, 3, 2, 1, 1, 1, 1,
       // Day 4
       1, 1, 1, 1, 1, 1, 2, 5, 8, 10, 10, 10, 10, 10, 10, 8, 5, 4, 3, 2, 1, 1, 1, 1,
       // Day 5
@@ -111,7 +111,7 @@ const EnergyGridSimulator = () => {
   const [gameRunning, setGameRunning] = useState(false);
   const [dayCount, setDayCount] = useState(1);
   const [gameSpeed, setGameSpeed] = useState(1); // Default speed is 1x
-  
+
   // Asset counts
   const [solarPanelCount, setSolarPanelCount] = useState(0);
   const [home1Count, setHome1Count] = useState(0);
@@ -121,19 +121,19 @@ const EnergyGridSimulator = () => {
 
   // Max power values
   const [maxSolarPower, setMaxSolarPower] = useState(10); // kW per solar panel
-  
+
   const [showDebug, setShowDebug] = useState(false); // Toggle for debug information
 
   // Calculate solar energy production based on hour, weather and count
   const calculateSolarProduction = useCallback((hour, count) => {
     const time = hour % 24; // Time of day
     const weather = weekData.weather[hour];
-    
+
     // Daylight hours (6am to 6pm)
     if (time >= 6 && time <= 18) {
       // Base solar production depends on time of day
       const timeEfficiency = 1 - Math.abs((time - 12) / 6);
-      
+
       // Weather effects on solar
       let weatherMultiplier = 0;
       if (weather === 'clear') {
@@ -143,16 +143,16 @@ const EnergyGridSimulator = () => {
       } else if (weather === 'stormy') {
         weatherMultiplier = 0.2;
       }
-      
+
       return maxSolarPower * timeEfficiency * weatherMultiplier * count;
     }
-    
+
     return 0;
   }, [weekData.weather, maxSolarPower]);
 
   const [solarEnergyProduced, setSolarEnergyProduced] = useState(0);
   const [totalEnergyProduced, setTotalEnergyProduced] = useState(0);
-  
+
   // State variables for consumption values
   const [home1EnergyConsumed, setHome1EnergyConsumed] = useState(0);
   const [home2EnergyConsumed, setHome2EnergyConsumed] = useState(0);
@@ -209,25 +209,25 @@ const EnergyGridSimulator = () => {
   useEffect(() => {
     const initialSolarProduction = calculateSolarProduction(0, solarPanelCount);
     const initialTotalProduction = initialSolarProduction;
-    
+
     const initialHome1Consumption = calculateHome1Consumption(0);
     const initialHome2Consumption = calculateHome2Consumption(0);
     const initialHome3Consumption = calculateHome3Consumption(0);
     const initialBusinessConsumption = calculateBusinessConsumption(0);
-    const initialTotalConsumption = initialHome1Consumption + initialHome2Consumption + 
+    const initialTotalConsumption = initialHome1Consumption + initialHome2Consumption +
                                     initialHome3Consumption + initialBusinessConsumption;
-    
+
     setSolarEnergyProduced(initialSolarProduction);
     setTotalEnergyProduced(initialTotalProduction);
-    
+
     setHome1EnergyConsumed(initialHome1Consumption);
     setHome2EnergyConsumed(initialHome2Consumption);
     setHome3EnergyConsumed(initialHome3Consumption);
     setBusinessEnergyConsumed(initialBusinessConsumption);
     setTotalEnergyConsumed(initialTotalConsumption);
-    
-  }, [calculateSolarProduction, calculateHome1Consumption, 
-      calculateHome2Consumption, calculateHome3Consumption, calculateBusinessConsumption, 
+
+  }, [calculateSolarProduction, calculateHome1Consumption,
+      calculateHome2Consumption, calculateHome3Consumption, calculateBusinessConsumption,
       solarPanelCount]);
 
   // Format time to display - memoized to avoid recreation on each render
@@ -240,7 +240,7 @@ const EnergyGridSimulator = () => {
     return weekData.weather[currentHour];
   }, [weekData.weather, currentHour]);
 
-  // Calculate grid interaction - memoized 
+  // Calculate grid interaction - memoized
   const getGridInteraction = useCallback(() => {
     return getTotalConsumption() - totalEnergyProduced;
   }, [getTotalConsumption, totalEnergyProduced]);
@@ -251,19 +251,19 @@ const EnergyGridSimulator = () => {
     for (let i = 0; i < 24; i++) {
       const hour = (currentHour + i) % weekData.weather.length;
       const time = (currentHour + i) % 24;
-      
+
       const home1Consumption = calculateHome1Consumption(hour);
       const home2Consumption = calculateHome2Consumption(hour);
       const home3Consumption = calculateHome3Consumption(hour);
       const businessConsumption = calculateBusinessConsumption(hour);
-      
+
       const solarProduction = calculateSolarProduction(hour, solarPanelCount);
-      
+
       const totalConsumption = home1Consumption + home2Consumption + home3Consumption + businessConsumption;
       const totalProduction = solarProduction;
-      
+
       const netConsumption = totalConsumption - totalProduction;
-      
+
       forecast.push({
         hour: time,
         netConsumption: netConsumption,
@@ -272,7 +272,7 @@ const EnergyGridSimulator = () => {
       });
     }
     return forecast;
-  }, [currentHour, weekData, calculateHome1Consumption, calculateHome2Consumption, 
+  }, [currentHour, weekData, calculateHome1Consumption, calculateHome2Consumption,
       calculateHome3Consumption, calculateBusinessConsumption,
       solarPanelCount, calculateSolarProduction]);
 
@@ -281,7 +281,7 @@ const EnergyGridSimulator = () => {
     for (let i = 0; i < 24; i++) {
       const hour = (currentHour + i) % weekData.weather.length;
       const production = calculateSolarProduction(hour, 1);
-      
+
       forecast.push({
         hour: (currentHour + i) % 24,
         production: production
@@ -290,7 +290,7 @@ const EnergyGridSimulator = () => {
     return forecast;
   }, [currentHour, calculateSolarProduction, weekData.weather.length]);
 
-  
+
   // Create forecast data functions for each home
   const getHome1Forecast = useCallback(() => {
     const forecast = [];
@@ -343,48 +343,48 @@ const getHome3Forecast = useCallback(() => {
 // Reset game function
   const resetGame = useCallback(() => {
     setGameRunning(false);
-    
+
     setCurrentHour(0);
     setDayCount(1);
     setGameSpeed(1);
     setHourStarted(false);
-	
+
     setMaxSolarPower(10);
-    
+
     setSolarPanelCount(0);
     setHome1Count(0);
     setHome2Count(0);
     setHome3Count(0);
     setBusinessCount(0);
-	
+
     setShowDebug(false);
-    
+
     const initialSolarProduction = calculateSolarProduction(0, 0);
-    
+
     const initialHome1Consumption = calculateHome1Consumption(0);
     const initialHome2Consumption = calculateHome2Consumption(0);
     const initialHome3Consumption = calculateHome3Consumption(0);
     const initialBusinessConsumption = calculateBusinessConsumption(0);
-    const initialTotalConsumption = initialHome1Consumption + initialHome2Consumption + 
+    const initialTotalConsumption = initialHome1Consumption + initialHome2Consumption +
                                   initialHome3Consumption + initialBusinessConsumption;
-    
+
     setSolarEnergyProduced(initialSolarProduction);
     setTotalEnergyProduced(initialSolarProduction);
-    
+
     setHome1EnergyConsumed(initialHome1Consumption);
     setHome2EnergyConsumed(initialHome2Consumption);
     setHome3EnergyConsumed(initialHome3Consumption);
     setBusinessEnergyConsumed(initialBusinessConsumption);
     setTotalEnergyConsumed(initialTotalConsumption);
-    
+
     timeAccumulatorRef.current = 0;
     lastDayTransitionRef.current = null;
-  }, [calculateSolarProduction, calculateHome1Consumption, 
+  }, [calculateSolarProduction, calculateHome1Consumption,
       calculateHome2Consumption, calculateHome3Consumption, calculateBusinessConsumption]);
 
   // Track values for the current hour and animation
   const [hourStarted, setHourStarted] = useState(false);
-  
+
   // Track elapsed time for hour updates using a ref for better performance
   const timeAccumulatorRef = useRef(0);
   const lastDayTransitionRef = useRef(null);
@@ -393,11 +393,11 @@ const getHome3Forecast = useCallback(() => {
   useEffect(() => {
     if (gameRunning) {
       const solarProduction = calculateSolarProduction(currentHour, solarPanelCount);
-      
+
       setSolarEnergyProduced(solarProduction);
       setTotalEnergyProduced(solarProduction);
     }
-  }, [solarPanelCount, gameRunning, currentHour, 
+  }, [solarPanelCount, gameRunning, currentHour,
       calculateSolarProduction]);
 
   // Effect to update consumption values when consumer counts change
@@ -407,9 +407,9 @@ const getHome3Forecast = useCallback(() => {
       const home2Consumption = calculateHome2Consumption(currentHour);
       const home3Consumption = calculateHome3Consumption(currentHour);
       const businessConsumption = calculateBusinessConsumption(currentHour);
-      const totalConsumption = home1Consumption + home2Consumption + 
+      const totalConsumption = home1Consumption + home2Consumption +
                                home3Consumption + businessConsumption;
-      
+
       setHome1EnergyConsumed(home1Consumption);
       setHome2EnergyConsumed(home2Consumption);
       setHome3EnergyConsumed(home3Consumption);
@@ -417,18 +417,18 @@ const getHome3Forecast = useCallback(() => {
       setTotalEnergyConsumed(totalConsumption);
     }
   }, [home1Count, home2Count, home3Count, businessCount, gameRunning, currentHour,
-      calculateHome1Consumption, calculateHome2Consumption, 
+      calculateHome1Consumption, calculateHome2Consumption,
       calculateHome3Consumption, calculateBusinessConsumption]);
 
   // Effect to update energy production when max power values change
   useEffect(() => {
     if (gameRunning) {
       const solarProduction = calculateSolarProduction(currentHour, solarPanelCount);
-      
+
       setSolarEnergyProduced(solarProduction);
       setTotalEnergyProduced(solarProduction);
     }
-  }, [maxSolarPower, gameRunning, currentHour, 
+  }, [maxSolarPower, gameRunning, currentHour,
       solarPanelCount, calculateSolarProduction]);
 
   // Handle game logic with split rendering and game hour cycles
@@ -442,22 +442,22 @@ const getHome3Forecast = useCallback(() => {
         const home3Consumption = calculateHome3Consumption(currentHour);
         const businessConsumption = calculateBusinessConsumption(currentHour);
         const totalConsumption = home1Consumption + home2Consumption + home3Consumption + businessConsumption;
-        
+
         const solarProduction = calculateSolarProduction(currentHour, solarPanelCount);
         const totalProduction = solarProduction;
         const gridInteraction = totalConsumption - totalProduction;
-        
+
         setHourStarted(true);
-        
+
         setSolarEnergyProduced(solarProduction);
         setTotalEnergyProduced(totalProduction);
-        
+
         setHome1EnergyConsumed(home1Consumption);
         setHome2EnergyConsumed(home2Consumption);
         setHome3EnergyConsumed(home3Consumption);
         setBusinessEnergyConsumed(businessConsumption);
         setTotalEnergyConsumed(totalConsumption);
-        
+
         if (showDebug) {
           console.log(`Hour ${currentHour} details:`, {
             gridInteraction: gridInteraction.toFixed(2),
@@ -466,48 +466,48 @@ const getHome3Forecast = useCallback(() => {
           });
         }
       }
-      
+
       timeAccumulatorRef.current += 0.01 * gameSpeed;
-      
+
       if (timeAccumulatorRef.current >= 1) {
         setCurrentHour(prevHour => {
           const nextHour = prevHour + 1;
-          
+
           if (nextHour >= weekData.weather.length) {
             setGameRunning(false);
             return prevHour;
           }
-          
+
           if (nextHour % 24 === 0 && lastDayTransitionRef.current !== nextHour) {
             lastDayTransitionRef.current = nextHour;
             setDayCount((prevDay) => prevDay + 1);
           }
-          
+
           setHourStarted(false);
-          
+
           return nextHour;
         });
 
         timeAccumulatorRef.current = 0;
       }
-      
+
     }, 10);
-    
+
     return () => clearInterval(renderLoop);
   }, [gameRunning, currentHour, weekData, hourStarted, gameSpeed, showDebug,
       solarPanelCount, calculateSolarProduction,
-      calculateHome1Consumption, calculateHome2Consumption, calculateHome3Consumption, 
+      calculateHome1Consumption, calculateHome2Consumption, calculateHome3Consumption,
       calculateBusinessConsumption]);
 
   return (
-    <div className="w-full h-full p-4 rounded-lg bg-blue-100 text-gray-800">   
+    <div className="w-full h-full p-4 rounded-lg bg-blue-100 text-gray-800">
      <div className="flex justify-between items-center mb-6">
         <div className="w-1/4">
-            <h2 className="text-2xl font-bold">Energy Grid Simulator</h2> 
+            <h2 className="text-2xl font-bold">Energy Grid Simulator</h2>
             <span className="text-base font-normal text-gray-600">by Iacopo Savelli (iacopo.savelli@unibocconi.it)</span>
             <p className="text-lg">Day: {dayCount} | Time: {formatHour(currentHour % 24)} | Weather: {getCurrentWeather()}</p>
         </div>
-  
+
         <div className="w-1/2 text-center">
             <div className="bg-blue-50 rounded-lg p-4 shadow text-center">
                 <div className="flex justify-around items-center mt-2">
@@ -528,46 +528,46 @@ const getHome3Forecast = useCallback(() => {
                 </div>
             </div>
         </div>
-  
+
         <div className="w-1/4 text-right">
             <div className="flex flex-col items-end">
                 <div className="flex justify-end mb-2">
-                    <button 
+                    <button
                         onClick={() => setGameRunning(!gameRunning)}
                         className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
                     >
                         {gameRunning ? 'Pause' : 'Start'}
                     </button>
-                    
-                    <button 
+
+                    <button
                         onClick={resetGame}
                         className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 ml-2"
-                    > 
+                    >
                         Reset
                     </button>
                 </div>
-                
+
                 <div className="flex items-center">
                     <span className="mr-2">Speed:</span>
-                    <button 
+                    <button
                         onClick={() => setGameSpeed(1)}
                         className={`px-2 py-1 mx-1 rounded ${gameSpeed === 1 ? 'bg-green-500 text-white' : 'bg-gray-300'}`}
                     >
                         1x
                     </button>
-                    <button 
+                    <button
                         onClick={() => setGameSpeed(2)}
                         className={`px-2 py-1 mx-1 rounded ${gameSpeed === 2 ? 'bg-green-500 text-white' : 'bg-gray-300'}`}
                     >
                         2x
                     </button>
-                    <button 
+                    <button
                         onClick={() => setGameSpeed(5)}
                         className={`px-2 py-1 mx-1 rounded ${gameSpeed === 5 ? 'bg-green-500 text-white' : 'bg-gray-300'}`}
                     >
                         5x
                     </button>
-                    <button 
+                    <button
                         onClick={() => setGameSpeed(10)}
                         className={`px-2 py-1 mx-1 rounded ${gameSpeed === 10 ? 'bg-green-500 text-white' : 'bg-gray-300'}`}
                     >
@@ -578,33 +578,33 @@ const getHome3Forecast = useCallback(() => {
         </div>
     </div>
 
-         
+
       {/* Main components layout - side-by-side with solar on left and homes on right */}
       <div className="flex flex-row space-x-4">
         {/* Left Column - Energy Sources */}
         <div className="flex flex-col space-y-8 w-1/4">
-			
+
 		<div className="border border-gray-300 rounded-lg p-3 mb-3 bg-gray-50">
         <h2 className="text-xl font-bold text-center mb-4">Generators</h2>
-		
+
     {/* Solar Panel Section */}
 	<div className="flex flex-col items-center justify-center bg-white rounded-lg p-4 shadow-md border-2 border-yellow-300">
     <div className="text-center w-full">
     {/* Solar Production Forecast Chart */}
     <div className="h-32 w-full mb-2">
     <ResponsiveContainer width="100%" height="100%">
-      <LineChart data={getSolarForecast()}>
+      <BarChart data={getSolarForecast()}>
         <XAxis dataKey="hour" tick={{fontSize: 10}} interval={3}label={{value: "Hours", position: "insideBottom", offset: -2}} />
-            <YAxis 
+            <YAxis
               tick={{fontSize: 10}}
-              label={{ 
-                value: 'kW', 
+              label={{
+                value: 'kW',
                 angle: -90
               }}
             />
         <Tooltip formatter={(value) => [`${value.toFixed(1)} kW`, 'Solar']} />
-        <Line type="monotone" dataKey="production" stroke="#f59e0b" strokeWidth={2} dot={false} />
-      </LineChart>
+        <Bar dataKey="production" fill="#f59e0b" />
+      </BarChart>
     </ResponsiveContainer>
     </div>
 
@@ -618,19 +618,19 @@ const getHome3Forecast = useCallback(() => {
           {/* Solar cells - 3x3 grid */}
           <div className="grid grid-cols-3 grid-rows-3 gap-1 p-1 flex-grow">
             {[...Array(9)].map((_, i) => (
-              <div 
+              <div
                 key={i}
                 className={`rounded flex items-center justify-center ${
                   (currentHour % 24) >= 6 && (currentHour % 24) <= 18
-                    ? solarEnergyProduced > 0 
-                      ? 'bg-gradient-to-br from-blue-500 to-blue-700' 
+                    ? solarEnergyProduced > 0
+                      ? 'bg-gradient-to-br from-blue-500 to-blue-700'
                       : 'bg-blue-950'
                     : 'bg-gray-900' // Darker at night
                 }`}
                 style={{
                   transition: 'all 0.3s ease',
-                  boxShadow: (currentHour % 24) >= 6 && (currentHour % 24) <= 18 && solarEnergyProduced > 0 
-                    ? 'inset 0 0 5px rgba(255, 255, 255, 0.5)' 
+                  boxShadow: (currentHour % 24) >= 6 && (currentHour % 24) <= 18 && solarEnergyProduced > 0
+                    ? 'inset 0 0 5px rgba(255, 255, 255, 0.5)'
                     : 'none'
                 }}
               >
@@ -638,7 +638,7 @@ const getHome3Forecast = useCallback(() => {
                 {(currentHour % 24) >= 6 && (currentHour % 24) <= 18 && solarEnergyProduced > 0 && (
                   <div className="w-1/3 h-1/3 bg-white opacity-20 rounded-full" />
                 )}
-                
+
                 {/* Night time appearance - small star reflection */}
                 {((currentHour % 24) < 6 || (currentHour % 24) > 18) && i % 4 === 0 && (
                   <div className="w-1 h-1 bg-white opacity-10 rounded-full" />
@@ -646,13 +646,13 @@ const getHome3Forecast = useCallback(() => {
               </div>
             ))}
           </div>
-          
+
           {/* Panel connection - red point becomes green when generating */}
           <div className="h-3 bg-gray-700 flex justify-start px-1">
-            <div 
+            <div
               className={`w-2 h-2 rounded-full mt-0.5 transition-colors duration-300 ${
                 solarEnergyProduced > 0 ? 'bg-green-500' : 'bg-red-500'
-              }`} 
+              }`}
             />
           </div>
         </div>
@@ -664,39 +664,39 @@ const getHome3Forecast = useCallback(() => {
       <div className="relative">
         {(currentHour % 24) > 6 && (currentHour % 24) <= 18 ? (
           // Sun indicator with rays during day
-          <div 
+          <div
             className={`w-24 h-24 rounded-full flex items-center justify-center transition-all duration-300 ${
               solarEnergyProduced > 0 ? 'opacity-100' : 'opacity-20'
             }`}
             style={{
               background: solarEnergyProduced > 0 ? '#fbbf24' : '#9ca3af',
-              boxShadow: solarEnergyProduced > 0 
-                ? '0 0 20px rgba(251, 191, 36, 0.7)' 
+              boxShadow: solarEnergyProduced > 0
+                ? '0 0 20px rgba(251, 191, 36, 0.7)'
                 : 'none'
             }}
           >
             {/* Sun rays */}
             {solarEnergyProduced > 0 && (
               <>
-                <div className="absolute w-2 h-14 bg-yellow-300 animate-pulse" 
+                <div className="absolute w-2 h-14 bg-yellow-300 animate-pulse"
                     style={{transform: 'rotate(0deg) translateY(-16px)'}} />
-                <div className="absolute w-2 h-14 bg-yellow-300 animate-pulse" 
+                <div className="absolute w-2 h-14 bg-yellow-300 animate-pulse"
                     style={{transform: 'rotate(45deg) translateY(-16px)'}} />
-                <div className="absolute w-2 h-14 bg-yellow-300 animate-pulse" 
+                <div className="absolute w-2 h-14 bg-yellow-300 animate-pulse"
                     style={{transform: 'rotate(90deg) translateY(-16px)'}} />
-                <div className="absolute w-2 h-14 bg-yellow-300 animate-pulse" 
+                <div className="absolute w-2 h-14 bg-yellow-300 animate-pulse"
                     style={{transform: 'rotate(135deg) translateY(-16px)'}} />
               </>
             )}
-            <Sun 
-              size={36} 
-              fill={solarEnergyProduced > 0 ? "#ffffff" : "#9ca3af"} 
-              className="text-yellow-500 z-10" 
+            <Sun
+              size={36}
+              fill={solarEnergyProduced > 0 ? "#ffffff" : "#9ca3af"}
+              className="text-yellow-500 z-10"
             />
           </div>
         ) : (
           // Moon indicator during night
-          <div 
+          <div
             className="w-24 h-24 rounded-full flex items-center justify-center bg-gray-800"
             style={{
               boxShadow: '0 0 15px rgba(255, 255, 255, 0.2)'
@@ -704,12 +704,12 @@ const getHome3Forecast = useCallback(() => {
           >
             {/* Moon symbol */}
             <div className="w-16 h-16 rounded-full bg-gray-300 relative overflow-hidden">
-              <div className="absolute w-12 h-12 rounded-full bg-gray-800" 
+              <div className="absolute w-12 h-12 rounded-full bg-gray-800"
                   style={{top: '-3px', right: '-8px'}} />
             </div>
           </div>
         )}
-        
+
         {/* Weather indicators */}
         {getCurrentWeather() === 'cloudy' && (
           <Cloud size={80} className="absolute top-10 -right-4 text-gray-400 z-10" fill="currentColor" />
@@ -724,14 +724,14 @@ const getHome3Forecast = useCallback(() => {
     </div>
     </div>
 
-    <h3 className="text-xl mt-2">Photovoltaic Panel ({maxSolarPower} kW)</h3>	
+    <h3 className="text-xl mt-2">Photovoltaic Panel ({maxSolarPower} kW)</h3>
 	<p>Energy: <span className="font-bold">{solarPanelCount !== 0 ? (solarEnergyProduced/solarPanelCount).toFixed(1) + " kW" : "not selected"}</span></p>
     <p>
-    {(currentHour % 24) >= 6 && (currentHour % 24) <= 18 
-      ? getCurrentWeather() === 'clear' 
-        ? 'Clear sky - optimal generation' 
-        : getCurrentWeather() === 'cloudy' 
-          ? 'Cloudy - reduced efficiency' 
+    {(currentHour % 24) >= 6 && (currentHour % 24) <= 18
+      ? getCurrentWeather() === 'clear'
+        ? 'Clear sky - optimal generation'
+        : getCurrentWeather() === 'cloudy'
+          ? 'Cloudy - reduced efficiency'
           : 'Stormy - minimal generation'
       : 'Night - no generation'}
     </p>
@@ -745,40 +745,29 @@ const getHome3Forecast = useCallback(() => {
     {/* Center Column - Net Consumption Chart */}
     <div className="w-1/4 bg-white rounded-lg p-4 shadow-md">
     <h2 className="text-xl font-bold text-center mb-4">Net Grid Power Flow <br />
-      <span className="text-base font-normal text-gray-700">(import positive/export negative)</span> 
+      <span className="text-base font-normal text-gray-700">(import positive/export negative)</span>
     </h2>
     <div className="h-64 w-full mb-2">
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={getNetConsumptionForecast()}>
+        <BarChart data={getNetConsumptionForecast()}>
           <XAxis dataKey="hour" tick={{fontSize: 10}} interval={3} label={{value: "Hours", position: "insideBottom", offset: -2}} />
-            <YAxis 
+            <YAxis
               tick={{fontSize: 10}}
-              label={{ 
-                value: 'kW', 
+              label={{
+                value: 'kW',
                 angle: -90
               }}
             />
           <Tooltip formatter={(value, name) => {
             return [`${Math.abs(value).toFixed(1)} kW`, value >= 0 ? 'Importing' : 'Exporting'];
           }} />
-          <svg>
-            <defs>
-              <linearGradient id="zeroLine" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#888" stopOpacity={0.8}/>
-                <stop offset="100%" stopColor="#888" stopOpacity={0.8}/>
-              </linearGradient>
-            </defs>
-          </svg>
           <ReferenceLine y={0} stroke="#888" strokeDasharray="3 3" />
-          <Line 
-            type="monotone" 
-            dataKey="netConsumption" 
-            stroke="#6366f1" 
-            strokeWidth={2} 
-            dot={false}
-            strokeDasharray={(x) => x.payload.netConsumption >= 0 ? "" : ""}
-          />
-        </LineChart>
+            <Bar dataKey="netConsumption">
+                {getNetConsumptionForecast().map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.netConsumption >= 0 ? '#ef4444' : '#22c55e'} />
+                ))}
+            </Bar>
+        </BarChart>
       </ResponsiveContainer>
     </div>
 
@@ -792,11 +781,11 @@ const getHome3Forecast = useCallback(() => {
     {/* Consumers Section */}
     <div className="border border-gray-300 rounded-lg p-3 mb-3 bg-gray-50">
       <h5 className="text-lg font-semibold mb-2 text-left border-b pb-1">Consumers</h5>
-      
+
       <div className="flex items-center justify-between mb-2 p-2 bg-blue-50 rounded">
         <span className="text-sm text-blue-700 font-semibold">Smart-Working:</span>
         <div className="flex items-center">
-          <button 
+          <button
             className="w-8 h-8 bg-blue-500 text-white rounded-l flex items-center justify-center hover:bg-blue-600"
             onClick={() => setHome1Count(Math.max(0, home1Count - 1))}
           >
@@ -805,7 +794,7 @@ const getHome3Forecast = useCallback(() => {
           <span className="w-8 h-8 bg-white flex items-center justify-center border-t border-b">
             {home1Count}
           </span>
-          <button 
+          <button
             className="w-8 h-8 bg-blue-500 text-white rounded-r flex items-center justify-center hover:bg-blue-600"
             onClick={() => setHome1Count(home1Count + 1)}
           >
@@ -813,11 +802,11 @@ const getHome3Forecast = useCallback(() => {
           </button>
         </div>
       </div>
-      
+
       <div className="flex items-center justify-between mb-2 p-2 bg-yellow-50 rounded">
         <span className="text-sm text-yellow-700 font-semibold">Standard Home:</span>
         <div className="flex items-center">
-          <button 
+          <button
             className="w-8 h-8 bg-yellow-500 text-white rounded-l flex items-center justify-center hover:bg-yellow-600"
             onClick={() => setHome2Count(Math.max(0, home2Count - 1))}
           >
@@ -826,7 +815,7 @@ const getHome3Forecast = useCallback(() => {
           <span className="w-8 h-8 bg-white flex items-center justify-center border-t border-b">
             {home2Count}
           </span>
-          <button 
+          <button
             className="w-8 h-8 bg-yellow-500 text-white rounded-r flex items-center justify-center hover:bg-yellow-600"
             onClick={() => setHome2Count(home2Count + 1)}
           >
@@ -834,11 +823,11 @@ const getHome3Forecast = useCallback(() => {
           </button>
         </div>
       </div>
-      
+
       <div className="flex items-center justify-between mb-2 p-2 bg-green-50 rounded">
         <span className="text-sm text-green-700 font-semibold">Large Family:</span>
         <div className="flex items-center">
-          <button 
+          <button
             className="w-8 h-8 bg-green-500 text-white rounded-l flex items-center justify-center hover:bg-green-600"
             onClick={() => setHome3Count(Math.max(0, home3Count - 1))}
           >
@@ -847,7 +836,7 @@ const getHome3Forecast = useCallback(() => {
           <span className="w-8 h-8 bg-white flex items-center justify-center border-t border-b">
             {home3Count}
           </span>
-          <button 
+          <button
             className="w-8 h-8 bg-green-500 text-white rounded-r flex items-center justify-center hover:bg-green-600"
             onClick={() => setHome3Count(home3Count + 1)}
           >
@@ -855,11 +844,11 @@ const getHome3Forecast = useCallback(() => {
           </button>
         </div>
       </div>
-      
+
       <div className="flex items-center justify-between mb-2 p-2 bg-purple-50 rounded">
         <span className="text-sm text-purple-700 font-semibold">Businesses:</span>
         <div className="flex items-center">
-          <button 
+          <button
             className="w-8 h-8 bg-purple-500 text-white rounded-l flex items-center justify-center hover:bg-purple-600"
             onClick={() => setBusinessCount(Math.max(0, businessCount - 1))}
           >
@@ -868,7 +857,7 @@ const getHome3Forecast = useCallback(() => {
           <span className="w-8 h-8 bg-white flex items-center justify-center border-t border-b">
             {businessCount}
           </span>
-          <button 
+          <button
             className="w-8 h-8 bg-purple-500 text-white rounded-r flex items-center justify-center hover:bg-purple-600"
             onClick={() => setBusinessCount(businessCount + 1)}
           >
@@ -881,11 +870,11 @@ const getHome3Forecast = useCallback(() => {
 
 <div className="border border-gray-300 rounded-lg p-3 mb-3 bg-gray-50">
   <h5 className="text-lg font-semibold mb-2 text-left border-b pb-1">Generators</h5>
-  
+
   <div className="flex items-center justify-between mb-2 p-2 bg-yellow-50 rounded">
     <span className="text-sm text-yellow-700 font-semibold">Photovoltaic Panels:</span>
     <div className="flex items-center">
-      <button 
+      <button
         className="w-8 h-8 bg-yellow-500 text-white rounded-l flex items-center justify-center hover:bg-yellow-600"
         onClick={() => setSolarPanelCount(Math.max(0, solarPanelCount - 1))}
       >
@@ -894,7 +883,7 @@ const getHome3Forecast = useCallback(() => {
       <span className="w-8 h-8 bg-white flex items-center justify-center border-t border-b">
         {solarPanelCount}
       </span>
-      <button 
+      <button
         className="w-8 h-8 bg-yellow-500 text-white rounded-r flex items-center justify-center hover:bg-yellow-600"
         onClick={() => setSolarPanelCount(solarPanelCount + 1)}
       >
@@ -917,61 +906,61 @@ const getHome3Forecast = useCallback(() => {
 <div className="bg-white rounded-lg p-4 shadow-md">
 <h2 className="text-xl font-bold text-center mb-4">Consumers</h2>
 <div className="grid grid-cols-2 gap-6">
-    
+
       {/* Home 1 - Work From Home */}
       <div className="flex flex-col items-center justify-center bg-white rounded-lg p-4 shadow-md border-2 border-blue-300">
       <div className="h-32 w-full mb-2">
         <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={getHome1Forecast()}>
+        <BarChart data={getHome1Forecast()}>
           <XAxis dataKey="hour" tick={{fontSize: 10}} interval={3} label={{value: "Hours", position: "insideBottom", offset: -2}} />
-        <YAxis 
+        <YAxis
           tick={{fontSize: 10}}
-          label={{ 
-            value: 'kW', 
+          label={{
+            value: 'kW',
             angle: -90
           }}
         />
           <Tooltip formatter={(value) => [`${value.toFixed(1)} kW`, 'Consumption']} />
-          <Line type="monotone" dataKey="consumption" stroke="#2563eb" strokeWidth={2} dot={false} />
-        </LineChart>
+          <Bar dataKey="consumption" fill="#2563eb" />
+        </BarChart>
         </ResponsiveContainer>
       </div>
-      
+
       <div className="flex justify-center items-center bg-blue-100 w-24 h-24 rounded-full mb-2">
         <Home size={40} className="text-blue-700" />
       </div>
-      
+
       <h3 className="text-lg font-semibold">Smart-Working Home</h3>
       <p className="text-sm text-gray-600">Work-from-home family</p>
 
-	  
+
 	  <p className="mt-2">Real-time consumption: <span className="font-bold">{home1Count !== 0 ? (getHome1Consumption() / home1Count).toFixed(1) + " kW" : "not selected"}</span></p>
-	  
+
       </div>
 
       {/* Home 2 - Office Worker */}
       <div className="flex flex-col items-center justify-center bg-white rounded-lg p-4 shadow-md border-2 border-yellow-300">
       <div className="h-32 w-full mb-2">
         <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={getHome2Forecast()}>
+        <BarChart data={getHome2Forecast()}>
           <XAxis dataKey="hour" tick={{fontSize: 10}} interval={3} label={{value: "Hours", position: "insideBottom", offset: -2}} />
-        <YAxis 
+        <YAxis
           tick={{fontSize: 10}}
-          label={{ 
-            value: 'kW', 
+          label={{
+            value: 'kW',
             angle: -90
           }}
         />
           <Tooltip formatter={(value) => [`${value.toFixed(1)} kW`, 'Consumption']} />
-          <Line type="monotone" dataKey="consumption" stroke="#f59e0b" strokeWidth={2} dot={false} />
-        </LineChart>
+          <Bar dataKey="consumption" fill="#f59e0b" />
+        </BarChart>
         </ResponsiveContainer>
       </div>
-      
+
       <div className="flex justify-center items-center bg-yellow-100 w-24 h-24 rounded-full mb-2">
         <Home size={40} className="text-yellow-700" />
       </div>
-      
+
       <h3 className="text-lg font-semibold">Standard Home</h3>
       <p className="text-sm text-gray-600">Empty during daytime</p>
       <p className="mt-2">Real-time consumption: <span className="font-bold">{home2Count !== 0 ? (getHome2Consumption() / home2Count).toFixed(1) + " kW" : "not selected"}</span></p>
@@ -981,25 +970,25 @@ const getHome3Forecast = useCallback(() => {
       <div className="flex flex-col items-center justify-center bg-white rounded-lg p-4 shadow-md border-2 border-green-300">
       <div className="h-32 w-full mb-2">
         <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={getHome3Forecast()}>
+        <BarChart data={getHome3Forecast()}>
           <XAxis dataKey="hour" tick={{fontSize: 10}} interval={3} label={{value: "Hours", position: "insideBottom", offset: -2}} />
-        <YAxis 
+        <YAxis
           tick={{fontSize: 10}}
-          label={{ 
-            value: 'kW', 
+          label={{
+            value: 'kW',
             angle: -90
           }}
         />
           <Tooltip formatter={(value) => [`${value.toFixed(1)} kW`, 'Consumption']} />
-          <Line type="monotone" dataKey="consumption" stroke="#10b981" strokeWidth={2} dot={false} />
-        </LineChart>
+          <Bar dataKey="consumption" fill="#10b981" />
+        </BarChart>
         </ResponsiveContainer>
       </div>
-      
+
       <div className="flex justify-center items-center bg-green-100 w-24 h-24 rounded-full mb-2">
         <Home size={40} className="text-green-700" />
       </div>
-      
+
       <h3 className="text-lg font-semibold">Large Family</h3>
       <p className="text-sm text-gray-600">High evening usage</p>
       <p className="mt-2">Real-time consumption: <span className="font-bold">{home3Count !== 0 ? (getHome3Consumption() / home3Count).toFixed(1) + " kW" : "not selected"}</span></p>
@@ -1009,25 +998,25 @@ const getHome3Forecast = useCallback(() => {
       <div className="flex flex-col items-center justify-center bg-white rounded-lg p-4 shadow-md border-2 border-purple-300">
       <div className="h-32 w-full mb-2">
         <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={getBusinessForecast()}>
+        <BarChart data={getBusinessForecast()}>
           <XAxis dataKey="hour" tick={{fontSize: 10}} interval={3} label={{value: "Hours", position: "insideBottom", offset: -2}} />
-        <YAxis 
+        <YAxis
           tick={{fontSize: 10}}
-          label={{ 
-            value: 'kW', 
+          label={{
+            value: 'kW',
             angle: -90
           }}
         />
           <Tooltip formatter={(value) => [`${value.toFixed(1)} kW`, 'Consumption']} />
-          <Line type="monotone" dataKey="consumption" stroke="#8b5cf6" strokeWidth={2} dot={false} />
-        </LineChart>
+          <Bar dataKey="consumption" fill="#8b5cf6" />
+        </BarChart>
         </ResponsiveContainer>
       </div>
-      
+
       <div className="flex justify-center items-center bg-purple-100 w-24 h-24 rounded-full mb-2">
         <Store size={40} className="text-purple-700" />
       </div>
-      
+
       <h3 className="text-lg font-semibold">Local Business</h3>
       <p className="text-sm text-gray-600">Closed weekends</p>
       <p className="mt-2">Real-time consumption: <span className="font-bold">{businessCount !==
@@ -1042,7 +1031,7 @@ const getHome3Forecast = useCallback(() => {
 
 {/* Game Instructions - Updated with home descriptions */}
 <div className="mt-4 p-4 bg-white rounded-lg text-gray-800">
-  
+
   <h3 className="font-bold mt-4 mb-2">Community Members:</h3>
   <ul className="list-disc pl-5">
     <li><span className="font-semibold">Home 1:</span> Work-from-home pattern with consistent daytime usage</li>
@@ -1051,8 +1040,8 @@ const getHome3Forecast = useCallback(() => {
     <li><span className="font-semibold">Business:</span> Daytime-only usage on weekdays, reduced weekend operation</li>
     <li><span className="font-semibold">Photovoltaic panel:</span> Photovoltaic panel with intermittent generation during daylight</li>
   </ul>
-</div> 
- 
+</div>
+
 <div className="mt-4 p-4 bg-white rounded-lg text-gray-800">
   <h3 className="font-bold mb-2">How to Play:</h3>
   <ul className="list-disc pl-5">
@@ -1062,12 +1051,12 @@ const getHome3Forecast = useCallback(() => {
     <li>Excess electricity is exported to the grid when generation exceeds local consumption.</li>
     <li>Your goal: Build your Energy Community and find the best combination to minimize grid imports!</li>
   </ul>
-  
+
 </div>
 
 <div className="mt-4 p-4 bg-white rounded-lg text-gray-800">
   <h3 className="font-bold mb-2">Settings</h3>
-  
+
 <div className="flex flex-col">
   <label htmlFor="maxSolarPower" className="text-sm font-medium text-gray-700 mb-1">
     Solar Panel Capacity (kW)
@@ -1105,7 +1094,7 @@ const getHome3Forecast = useCallback(() => {
     Show debug information
   </label>
 </div>
-  
+
 </div>
 
 
@@ -1116,7 +1105,7 @@ const getHome3Forecast = useCallback(() => {
   <div className="mt-4 p-4 bg-white rounded-lg text-gray-800">
   <h3 className="font-bold mb-2 flex items-center justify-between">
     <span>Debug Information (Hourly Data)</span>
-    <button 
+    <button
       className="px-2 py-1 text-xs bg-gray-200 hover:bg-gray-300 rounded"
       onClick={() => {
           const csvContent = "Hour,Day,Time,Weather,Solar Count,Home1 Count,Home2 Count,Home3 Count,Business Count,Solar Production (kW),Home1 Consumption (kW),Home2 Consumption (kW),Home3 Consumption (kW),Business Consumption (kW),Grid Interaction (kW)\n" +
@@ -1135,7 +1124,7 @@ const getHome3Forecast = useCallback(() => {
             const gridInteraction = totalConsumption - totalProduction;
             return `${hour},${day},${time}:00,${weather},${solarPanelCount},${home1Count},${home2Count},${home3Count},${businessCount},${solarProduction.toFixed(2)},${home1Consumption.toFixed(2)},${home2Consumption.toFixed(2)},${home3Consumption.toFixed(2)},${businessConsumption.toFixed(2)},${gridInteraction.toFixed(2)}`;
           }).join("\n");
-          
+
           // Create a temporary textarea to copy the text
           const textArea = document.createElement("textarea");
           textArea.value = csvContent;
@@ -1152,7 +1141,7 @@ const getHome3Forecast = useCallback(() => {
       Copy as CSV
     </button>
   </h3>
-  
+
   <div className="overflow-x-auto">
     <table className="min-w-full text-xs border-collapse">
       <thead>
@@ -1188,7 +1177,7 @@ const getHome3Forecast = useCallback(() => {
           const totalProduction = solarProduction;
           const totalConsumption = home1Consumption + home2Consumption + home3Consumption + businessConsumption;
           const gridInteraction = totalConsumption - totalProduction;
-          
+
           return (
             <tr key={hour} className={hour === currentHour ? "bg-blue-100" : hour % 2 === 0 ? "bg-gray-50" : ""}>
               <td className="p-1 border text-center">{hour}</td>
