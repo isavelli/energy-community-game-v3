@@ -763,11 +763,11 @@ const getHome3Forecast = useCallback(() => {
 
 
     {/* Center Column - Net Consumption Chart */}
-    <div className="w-1/4 bg-white rounded-lg p-4 shadow-md">
+    <div className="w-1/4 bg-white rounded-lg p-4 shadow-md flex flex-col">
     <h2 className="text-xl font-bold text-center mb-4">Net Grid Power Flow <br />
       <span className="text-base font-normal text-gray-700">(import positive/export negative)</span>
     </h2>
-    <div className="h-full w-full mb-2">
+    <div className="flex-grow w-full mb-2">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={getNetConsumptionForecast()}>
           <XAxis dataKey="hour" tick={{fontSize: 10}} interval={3} label={{value: "Hours", position: "insideBottom", offset: -2}} />
