@@ -547,7 +547,10 @@ const getHome3Forecast = useCallback(() => {
         <div className="w-1/2 text-center">
             {/* Single Unit Summary */}
             <div className="bg-blue-50 rounded-lg p-4 shadow flex items-center">
-                <span className="text-xl font-normal text-gray-600 mr-4 font-bold">Single Unit</span>
+                <div className="mr-4">
+					<p className="text-xl font-normal text-gray-600 font-bold">Single Unit</p>
+					<p className="text-sm font-normal text-gray-700">(1 Standard Home + 1 PV Panel)</p>
+				</div>
                 <div className="flex justify-around items-center flex-grow">
                     <div>
                         <p className="text-gray-600 font-bold">Consumption</p>
