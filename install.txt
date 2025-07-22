@@ -1,0 +1,45 @@
+---------------------------------------------------------------------------------
+How to Install
+---------------------------------------------------------------------------------
+NOTE: It requires Node.js (https://nodejs.org)
+
+Download the content and simply run start.bat.
+
+
+
+
+---------------------------------------------------------------------------------
+Troubleshooting
+---------------------------------------------------------------------------------
+
+In case of problems, you can recreate the folder and dependencies as follows:
+
+Run the following commands in the Windows shell (Start -> Command Prompt):
+
+npx create-react-app energy-community-game-v2
+cd energy-community-game-v2
+npm install lucide-react recharts
+
+----------
+Replace src/App.js with:
+
+import EnergyGamev2 from './EnergyGamev2';
+
+function App() {
+  return (
+    <div className="App">
+      <EnergyGamev2 />
+    </div>
+  );
+}
+
+export default App;
+
+----------
+
+Copy the src/EnergyGamev2.js from GitHub in the src folder just created.
+
+Finally, just double-click on the "start.bat" file to run the game.
+
+
+
